@@ -23,15 +23,16 @@ from pathlib import Path
 
 from starlette.concurrency import run_in_threadpool
 
-import model_registry as mr
-import live_features as lf
-from live_buffer import ModeWindowBuffer
-from rest_state import RestStateEngine
+from backend import model_registry as mr
+from backend import live_features as lf
+from backend.live_buffer import ModeWindowBuffer
+from backend.rest_state import RestStateEngine
+
 
 DRIVE_SCRIPTS_DIR = Path(r"D:\SIH-26\Drive Mode\scripts")
 if str(DRIVE_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(DRIVE_SCRIPTS_DIR))
-from vigilance_trend import VigilanceTrendEngine  # noqa: E402 — existing Drive trend/alarm engine, reused as-is
+from backend.vigilance_trend import VigilanceTrendEngine  # noqa: E402 — existing Drive trend/alarm engine, reused as-is
 
 logger = logging.getLogger("smartsense.live")
 

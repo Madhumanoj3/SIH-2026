@@ -17,7 +17,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, create_model
 
-from model_registry import DRIVE_FEATURE_NAMES, REST_FEATURE_NAMES
+from backend.model_registry import DRIVE_FEATURE_NAMES, REST_FEATURE_NAMES
 
 FiniteFloat = Annotated[float, Field(allow_inf_nan=False)]
 

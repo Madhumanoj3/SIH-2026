@@ -12,8 +12,7 @@ from typing import Mapping
 import joblib
 import numpy as np
 
-MODEL_BUNDLE_PATH = Path(r"D:\SIH-26\models\smartsense_models.pkl")
-
+MODEL_BUNDLE_PATH = Path(__file__).resolve().parent.parent / "models" / "smartsense_models.pkl"
 _bundle = joblib.load(MODEL_BUNDLE_PATH)
 
 BUNDLE_VERSION: str = _bundle.get("bundle_version", "unknown")

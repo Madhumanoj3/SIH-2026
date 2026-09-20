@@ -45,9 +45,9 @@ for _dir in (REST_SCRIPTS_DIR, DRIVE_SCRIPTS_DIR):
     if str(_dir) not in sys.path:
         sys.path.insert(0, str(_dir))
 
-from feature_extractor import extract_epoch_features as _rest_extract_epoch_features  # noqa: E402
-from dd_vigilance_features import eeg_features as _drive_eeg_features  # noqa: E402
-from dd_vigilance_features import eog_features as _drive_eog_features  # noqa: E402
+from backend.feature_extractor import extract_epoch_features as _rest_extract_epoch_features
+from backend.dd_vigilance_features import eeg_features as _drive_eeg_features
+from backend.dd_vigilance_features import eog_features as _drive_eog_features
 
 import mne  # noqa: E402
 
