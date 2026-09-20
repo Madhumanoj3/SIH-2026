@@ -1,0 +1,80 @@
+{
+  "ridge": {
+    "pooled": {
+      "mae": 27.402751087801516,
+      "rmse": 32.05239894224856,
+      "r2": 0.10147809690641973,
+      "pearson": 0.3306112899569895,
+      "spearman": 0.3000141095719809
+    },
+    "mean_subject_r2": -0.5176181324912559,
+    "median_subject_r2": -0.12463272706654782,
+    "std_subject_r2": 0.8927590457624434,
+    "mean_subject_pearson": 0.22022009603006015
+  },
+  "random_forest": {
+    "pooled": {
+      "mae": 27.7982947463187,
+      "rmse": 32.476442362752124,
+      "r2": 0.07754649416445947,
+      "pearson": 0.31326390307765606,
+      "spearman": 0.2650090882876117
+    },
+    "mean_subject_r2": -0.5856054458956158,
+    "median_subject_r2": -0.163933421513066,
+    "std_subject_r2": 0.9830148624656463,
+    "mean_subject_pearson": 0.23183309028057808
+  },
+  "xgboost": {
+    "pooled": {
+      "mae": 27.352364775042133,
+      "rmse": 32.45270910184917,
+      "r2": 0.07889422985648842,
+      "pearson": 0.3277454055439169,
+      "spearman": 0.28236390782044696
+    },
+    "mean_subject_r2": -0.5634118589535348,
+    "median_subject_r2": -0.188692577056634,
+    "std_subject_r2": 0.9134215227158294,
+    "mean_subject_pearson": 0.2358841688912857
+  },
+  "baseline_global_mean": {
+    "pooled": {
+      "mae": 30.895057804364967,
+      "rmse": 34.84724167255997,
+      "r2": -0.06204863161204943,
+      "pearson": -0.5141333130250227,
+      "spearman": -0.5809677775304221
+    },
+    "mean_subject_r2": null,
+    "median_subject_r2": null,
+    "std_subject_r2": null,
+    "mean_subject_pearson": null
+  },
+  "baseline_subject_mean": {
+    "pooled": {
+      "mae": 30.88970901082788,
+      "rmse": 34.84658605606901,
+      "r2": -0.06200866919243775,
+      "pearson": -0.5141493505027948,
+      "spearman": -0.5809677775304221
+    },
+    "mean_subject_r2": null,
+    "median_subject_r2": null,
+    "std_subject_r2": null,
+    "mean_subject_pearson": null
+  },
+  "baseline_ceiling": {
+    "pooled": {
+      "mae": 29.588746788231173,
+      "rmse": 44.9319343788535,
+      "r2": -0.7657036753953357,
+      "pearson": NaN,
+      "spearman": NaN
+    },
+    "mean_subject_r2": null,
+    "median_subject_r2": null,
+    "std_subject_r2": null,
+    "mean_subject_pearson": null
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "pred_vs_true_slope_correlation": 0.13159725637717007,
+  "slope_sign_agreement_pct": 0.532710796773124,
+  "n_true_declining_windows": 4853,
+  "pct_true_declining_flagged": 0.1660828353595714
+}

@@ -1,0 +1,15 @@
+# Python virtual environment
+Drive Mode/.venv/
+backend/.venv/
+# Archive
+archive/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Environment variables
+.env
+
+# Django logs
+*.log

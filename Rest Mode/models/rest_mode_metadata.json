@@ -1,0 +1,76 @@
+{
+  "model_name": "SmartSense Rest Mode N2 Classifier",
+  "model_id": "rest_mode_n2",
+  "artifact": "rest_mode_n2.joblib",
+  "model_artifact_filename": "rest_mode_n2.joblib",
+  "original_artifact_filename": "xgboost_n2.joblib (byte-identical original, archived at archive/rest_mode_experiments/models/original_model/xgboost_n2.joblib after Phase 4 hash re-verification)",
+  "model_type": "XGBClassifier",
+  "task": "binary_classification",
+  "target": "sleep_stage epoch classified as N2 vs non-N2",
+  "classes": ["non-N2", "N2"],
+  "class_definitions": {
+    "1": "N2 sleep stage",
+    "0": "Non-N2 (W, N1, N3, or R/REM)"
+  },
+  "dataset": "DREAMT (dreamt-dataset-for-real-time-sleep-stage-estimation-using-multisensor-wearable-technology-2.2.0)",
+  "sampling_rate_hz": 100,
+  "epoch_length_seconds": 30,
+  "eeg_channel": "C4-M1",
+  "eog_channels": "E1, E2 (combined as EOG = E1 - E2, bipolar)",
+  "preprocessing": {
+    "eeg_bandpass_hz": [0.5, 30],
+    "eog_bandpass_hz": [0.1, 10],
+    "filter_type": "Butterworth, order 4, applied via scipy sosfiltfilt (zero-phase)",
+    "missing_data_handling": "median/interpolation fill; epoch rejected if missing fraction exceeds threshold used in replay scripts (5%)"
+  },
+  "feature_count": 32,
+  "feature_names": [
+    "eeg_mean", "eeg_std", "eeg_variance", "eeg_rms", "eeg_min", "eeg_max", "eeg_range", "eeg_energy",
+    "eeg_delta_power", "eeg_theta_power", "eeg_alpha_power", "eeg_beta_power",
+    "eeg_delta_relative", "eeg_theta_relative", "eeg_alpha_relative", "eeg_beta_relative",
+    "eeg_theta_alpha_ratio", "eeg_theta_beta_ratio", "eeg_delta_theta_ratio", "eeg_spectral_entropy",
+    "eog_mean", "eog_std", "eog_variance", "eog_rms", "eog_min", "eog_max", "eog_range", "eog_energy",
+    "eog_low_frequency_power", "eog_low_frequency_relative", "eog_spectral_entropy", "eog_zero_crossings"
+  ],
+  "feature_names_in_training_order": [
+    "eeg_mean", "eeg_std", "eeg_variance", "eeg_rms", "eeg_min", "eeg_max", "eeg_range", "eeg_energy",
+    "eeg_delta_power", "eeg_theta_power", "eeg_alpha_power", "eeg_beta_power",
+    "eeg_delta_relative", "eeg_theta_relative", "eeg_alpha_relative", "eeg_beta_relative",
+    "eeg_theta_alpha_ratio", "eeg_theta_beta_ratio", "eeg_delta_theta_ratio", "eeg_spectral_entropy",
+    "eog_mean", "eog_std", "eog_variance", "eog_rms", "eog_min", "eog_max", "eog_range", "eog_energy",
+    "eog_low_frequency_power", "eog_low_frequency_relative", "eog_spectral_entropy", "eog_zero_crossings"
+  ],
+  "feature_order_source": "verified directly from the loaded model's own feature_names_in_ attribute (xgboost.sklearn.XGBClassifier), cross-checked against scripts/processed/train.csv column order - both agree",
+  "eeg_bands_hz": {
+    "delta": [0.5, 4],
+    "theta": [4, 8],
+    "alpha": [8, 13],
+    "beta": [13, 30]
+  },
+  "scaler": null,
+  "scaler_note": "No scaler is used. Verified from the archived training script (train_xgboost.py): the XGBClassifier is fit directly on the 32 raw features with no StandardScaler or other transform. This is expected for a tree-based model, not a missing artifact.",
+  "model_hyperparameters": {
+    "n_estimators": 300,
+    "max_depth": 6,
+    "learning_rate": 0.05,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "objective": "binary:logistic",
+    "random_state": 42
+  },
+  "inference_chain": [
+    "scripts/replay_test.py or scripts/replay_multiple.py (load model, extract features, predict per-epoch N2 probability)",
+    "scripts/sleep_state_engine.py (temporal smoothing over recent epochs)",
+    "scripts/smart_alarm.py (wake-during-N2 alarm logic: requires sustained consecutive N2 epochs within a smart window, not a single reading)"
+  ],
+  "xgboost_compatibility_warning": true,
+  "known_issues": [
+    "XGBoost version-compatibility warning on load: this model was pickled with an older XGBoost version than the currently installed one (xgboost 3.2.0 in the verification environment). It loads and predicts correctly today (re-confirmed in Phase 4), but XGBoost's own warning recommends re-exporting via Booster.save_model before this breaks in a future XGBoost release. Not re-exported yet, per instruction, to avoid altering the trained artifact.",
+    "scripts/replay_test.py imports the canonical scripts/feature_extractor.py for feature extraction, but scripts/replay_multiple.py contains an independently duplicated (not imported) copy of the same 32-feature extraction logic. Both were checked and currently use identical band definitions and filter cutoffs, but they are two separate code paths that could silently drift apart if one is edited without the other."
+  ],
+  "notes": [
+    "Tree-based XGBoost model; no feature scaling was used.",
+    "This model has not been clinically validated."
+  ],
+  "warning": "This is an ML engineering research model, not a clinically validated diagnostic device. Predictions are 30-second-epoch N2-sleep-stage classifications derived from the DREAMT dataset; no independent clinical validation, regulatory review, or evaluation on real BioAmp hardware has been performed."
+}

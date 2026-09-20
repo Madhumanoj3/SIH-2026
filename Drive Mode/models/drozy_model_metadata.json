@@ -1,0 +1,67 @@
+{
+  "dataset": "DROZY / DD-Database",
+  "model_type": "XGBRegressor",
+  "target": "target_B_60",
+  "target_formula": "vigilance(t) = 100 * (1 - exp(-d(t)/60)), d(t) = min_i |t - event_i| (bidirectional distance to nearest self-report event, seconds)",
+  "sampling_rate_hz": 128,
+  "window_size_seconds": 8,
+  "eeg_channel": "C4-Ref",
+  "eog_channel": "LOC-Ref - ROC-Ref (bipolar horizontal EOG proxy)",
+  "preprocessing": {
+    "eeg_bandpass_hz": [
+      0.5,
+      40
+    ],
+    "eog_bandpass_hz": [
+      0.1,
+      15
+    ]
+  },
+  "feature_names": [
+    "eeg_mean",
+    "eeg_std",
+    "eeg_var",
+    "eeg_rms",
+    "eeg_range",
+    "eeg_total_power",
+    "eeg_delta_power",
+    "eeg_rel_delta",
+    "eeg_theta_power",
+    "eeg_rel_theta",
+    "eeg_alpha_power",
+    "eeg_rel_alpha",
+    "eeg_beta_power",
+    "eeg_rel_beta",
+    "eeg_theta_alpha",
+    "eeg_theta_beta",
+    "eeg_spectral_entropy",
+    "eog_mean",
+    "eog_std",
+    "eog_rms",
+    "eog_var",
+    "eog_amplitude",
+    "eog_zcr",
+    "eog_lowfreq_power",
+    "eog_spectral_entropy",
+    "eog_blink_count",
+    "eog_blink_rate_per_min",
+    "eog_blink_duration_mean"
+  ],
+  "feature_count": 28,
+  "training_sample_count": 18118,
+  "subject_count": 10,
+  "subjects": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10"
+  ],
+  "timestamp_utc": "2026-09-11T01:10:58.760349+00:00",
+  "warning": "NOT clinically validated. This is an engineering research proxy model trained on an event-derived vigilance target (self-reported drowsiness button presses), not a measured physiological quantity. It is trained on C4-Ref (EEG reference unverified as M1) and LOC-ROC (unverified as true E1-E2). It has not been evaluated on any BioAmp hardware. This artifact is trained on ALL 10 subjects with no held-out subject, so it provides NO evidence of generalization to a new person - see the separate LOSO experiment results for that evidence, which showed weak, subject-unstable cross-subject performance (mean-subject R2 = -0.563)."
+}
