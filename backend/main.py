@@ -26,10 +26,10 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-import live_hub
-import model_registry as mr
-import trend
-from schemas import (
+from backend import live_hub
+from backend import model_registry as mr
+from backend import trend
+from backend.schemas import (
     DriveFeatures,
     DrivePredictionResponse,
     HealthResponse,
