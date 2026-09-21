@@ -19,7 +19,7 @@ const episodes = [
 // running locally) and shows the returned vigilance score here. Once real
 // hardware exists, only the feature-vector source changes.
 // ---------------------------------------------------------------------------
-const ML_BACKEND_URL = "http://127.0.0.1:8000";
+const ML_BACKEND_URL = "https://sih-2026-backend-bq02.onrender.com";
 
 export default function Drowsiness() {
   const { state, t } = useSmartSense();
