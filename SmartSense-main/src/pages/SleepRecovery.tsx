@@ -16,7 +16,7 @@ import restSamples from "@/lib/demoSamples/restSamples.json";
 // once hardware exists, only that data-selection step changes — this page,
 // the endpoint, and the response shape it expects all stay exactly the same.
 // ---------------------------------------------------------------------------
-const ML_BACKEND_URL = "http://127.0.0.1:8000";
+const ML_BACKEND_URL = "https://sih-2026-backend-bq02.onrender.com";
 
 interface MlAnalysis {
   prediction: "N2" | "Non-N2";
