@@ -5,14 +5,15 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * SmartSense design tokens — warm, rounded, "wellness app" feel.
- * Cards use soft shadows instead of hard borders; an original indigo/mint
- * palette (not a literal clone of any other health app) drives the accents.
+ * SmartSense design tokens — premium, futuristic AI driver-safety platform.
+ * Deep space canvas, electric violet/blue accent, soft glass panels with
+ * ambient glow instead of hard borders. Same token names as before so every
+ * component that already reads var(--color-*) picks this up for free.
  */
 
 @theme inline {
-  --font-display: "SmartSense Display", ui-rounded, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Space Grotesk", "SmartSense Display", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   --radius-sm: calc(var(--radius) - 6px);
   --radius-md: calc(var(--radius) - 2px);
@@ -47,79 +48,164 @@
 }
 
 :root {
-  --radius: 1.25rem;
+  --radius: 1.15rem;
 
-  /* warm, soft off-white canvas instead of stark clinical white/grey */
-  --background: oklch(0.975 0.008 85);
-  --foreground: oklch(0.24 0.03 275);
+  /* soft lavender-tinted daylight canvas — same premium accent family as dark mode */
+  --background: oklch(0.965 0.01 275);
+  --foreground: oklch(0.22 0.04 280);
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.24 0.03 275);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.24 0.03 275);
+  --card: oklch(1 0 0 / 82%);
+  --card-foreground: oklch(0.22 0.04 280);
+  --popover: oklch(1 0 0 / 96%);
+  --popover-foreground: oklch(0.22 0.04 280);
 
-  /* soft indigo — friendly, calm, distinct from a generic corporate navy */
-  --primary: oklch(0.56 0.15 280);
+  /* electric indigo/violet — futuristic without tipping into neon */
+  --primary: oklch(0.56 0.2 291);
   --primary-foreground: oklch(0.99 0.005 280);
+  --primary-2: oklch(0.62 0.16 255);
 
-  --secondary: oklch(0.95 0.015 280);
-  --secondary-foreground: oklch(0.34 0.06 280);
-  --muted: oklch(0.955 0.012 85);
-  --muted-foreground: oklch(0.52 0.03 275);
-  --accent: oklch(0.93 0.03 280);
-  --accent-foreground: oklch(0.34 0.06 280);
+  --secondary: oklch(0.94 0.018 285);
+  --secondary-foreground: oklch(0.32 0.07 285);
+  --muted: oklch(0.94 0.014 270);
+  --muted-foreground: oklch(0.48 0.035 275);
+  --accent: oklch(0.91 0.035 285);
+  --accent-foreground: oklch(0.32 0.07 285);
 
-  /* fresh, friendly status colors */
-  --destructive: oklch(0.6 0.21 25);
+  --destructive: oklch(0.6 0.21 22);
   --destructive-foreground: oklch(0.99 0.005 25);
-  --success: oklch(0.7 0.15 155);
-  --warning: oklch(0.79 0.15 75);
+  --success: oklch(0.68 0.15 158);
+  --warning: oklch(0.78 0.15 78);
 
-  --border: oklch(0.92 0.012 280 / 60%);
-  --input: oklch(0.9 0.015 280);
-  --ring: oklch(0.62 0.1 280);
+  --border: oklch(0.35 0.08 280 / 12%);
+  --input: oklch(0.4 0.06 280 / 16%);
+  --ring: oklch(0.58 0.16 288);
 
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.24 0.03 275);
-  --sidebar-border: oklch(0.92 0.012 280 / 60%);
+  --sidebar: oklch(1 0 0 / 78%);
+  --sidebar-foreground: oklch(0.22 0.04 280);
+  --sidebar-border: oklch(0.35 0.08 280 / 12%);
 
-  --gauge-track: oklch(0.93 0.015 280);
+  --gauge-track: oklch(0.88 0.02 280);
   --map-line: oklch(0.86 0.02 280);
 
-  --shadow-soft: 0 1px 2px oklch(0.3 0.05 280 / 4%), 0 8px 24px -8px oklch(0.3 0.08 280 / 12%);
-  --shadow-soft-lg: 0 4px 10px oklch(0.3 0.05 280 / 5%), 0 16px 40px -12px oklch(0.3 0.1 280 / 16%);
+  --glow-primary: oklch(0.56 0.2 291 / 30%);
+  --glow-success: oklch(0.68 0.15 158 / 30%);
+  --glow-warning: oklch(0.78 0.15 78 / 32%);
+  --glow-danger: oklch(0.6 0.21 22 / 30%);
+
+  --blob-a: oklch(0.72 0.16 291 / 22%);
+  --blob-b: oklch(0.7 0.14 250 / 18%);
+  --blob-c: oklch(0.78 0.14 320 / 14%);
+  --particle-color: oklch(0.4 0.1 285 / 45%);
+  --grid-line: oklch(0.4 0.08 280 / 6%);
+
+  --shadow-soft: 0 1px 2px oklch(0.3 0.05 280 / 5%), 0 8px 24px -8px oklch(0.3 0.08 280 / 14%);
+  --shadow-soft-lg: 0 4px 10px oklch(0.3 0.05 280 / 6%), 0 20px 48px -14px oklch(0.3 0.1 280 / 20%);
 }
 
 .dark {
-  --background: oklch(0.17 0.02 275);
-  --foreground: oklch(0.95 0.01 250);
-  --card: oklch(0.22 0.025 275);
-  --card-foreground: oklch(0.95 0.01 250);
-  --popover: oklch(0.22 0.025 275);
-  --popover-foreground: oklch(0.95 0.01 250);
-  --primary: oklch(0.76 0.12 280);
-  --primary-foreground: oklch(0.18 0.03 280);
-  --secondary: oklch(0.28 0.03 275);
-  --secondary-foreground: oklch(0.92 0.01 250);
-  --muted: oklch(0.28 0.025 275);
-  --muted-foreground: oklch(0.68 0.02 260);
-  --accent: oklch(0.32 0.04 280);
-  --accent-foreground: oklch(0.92 0.01 250);
-  --destructive: oklch(0.68 0.19 22);
-  --destructive-foreground: oklch(0.97 0.005 250);
-  --success: oklch(0.72 0.14 155);
-  --warning: oklch(0.8 0.14 80);
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 14%);
-  --ring: oklch(0.65 0.09 280);
-  --sidebar: oklch(0.2 0.025 275);
-  --sidebar-foreground: oklch(0.95 0.01 250);
-  --sidebar-border: oklch(1 0 0 / 6%);
-  --gauge-track: oklch(0.32 0.02 275);
-  --map-line: oklch(0.34 0.02 275);
+  /* deep space navy-violet, not flat black — gives the ambient glow somewhere to live */
+  --background: oklch(0.15 0.028 280);
+  --foreground: oklch(0.96 0.012 250);
 
-  --shadow-soft: 0 1px 2px oklch(0 0 0 / 20%), 0 8px 24px -8px oklch(0 0 0 / 35%);
-  --shadow-soft-lg: 0 4px 10px oklch(0 0 0 / 20%), 0 16px 40px -12px oklch(0 0 0 / 45%);
+  --card: oklch(0.26 0.035 280 / 55%);
+  --card-foreground: oklch(0.96 0.012 250);
+  --popover: oklch(0.22 0.03 280 / 96%);
+  --popover-foreground: oklch(0.96 0.012 250);
+
+  --primary: oklch(0.74 0.15 291);
+  --primary-foreground: oklch(0.15 0.03 285);
+  --primary-2: oklch(0.72 0.13 245);
+
+  --secondary: oklch(0.32 0.04 280 / 70%);
+  --secondary-foreground: oklch(0.93 0.012 250);
+  --muted: oklch(0.3 0.035 280 / 60%);
+  --muted-foreground: oklch(0.72 0.03 260);
+  --accent: oklch(0.36 0.05 285 / 65%);
+  --accent-foreground: oklch(0.93 0.012 250);
+
+  --destructive: oklch(0.7 0.19 20);
+  --destructive-foreground: oklch(0.15 0.02 20);
+  --success: oklch(0.75 0.15 158);
+  --warning: oklch(0.82 0.14 82);
+
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.72 0.14 291);
+
+  --sidebar: oklch(0.19 0.032 280 / 62%);
+  --sidebar-foreground: oklch(0.96 0.012 250);
+  --sidebar-border: oklch(1 0 0 / 8%);
+
+  --gauge-track: oklch(0.36 0.03 280 / 70%);
+  --map-line: oklch(0.4 0.03 280);
+
+  --glow-primary: oklch(0.74 0.15 291 / 45%);
+  --glow-success: oklch(0.75 0.15 158 / 40%);
+  --glow-warning: oklch(0.82 0.14 82 / 40%);
+  --glow-danger: oklch(0.7 0.19 20 / 42%);
+
+  --blob-a: oklch(0.55 0.18 291 / 32%);
+  --blob-b: oklch(0.5 0.16 250 / 26%);
+  --blob-c: oklch(0.55 0.16 320 / 20%);
+  --particle-color: oklch(0.85 0.06 285 / 55%);
+  --grid-line: oklch(1 0 0 / 4%);
+
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 25%), 0 8px 24px -8px oklch(0 0 0 / 40%);
+  --shadow-soft-lg: 0 4px 14px oklch(0 0 0 / 25%), 0 24px 60px -16px oklch(0 0 0 / 50%);
+}
+
+/* Pins a subtree to the light-theme token values regardless of the site's own
+   dark/light toggle — same technique as .dark above, just the other palette.
+   Used by the homepage hero, which always wants its own soft/light backdrop. */
+.force-light {
+  --background: oklch(0.965 0.01 275);
+  --foreground: oklch(0.22 0.04 280);
+
+  --card: oklch(1 0 0 / 82%);
+  --card-foreground: oklch(0.22 0.04 280);
+  --popover: oklch(1 0 0 / 96%);
+  --popover-foreground: oklch(0.22 0.04 280);
+
+  --primary: oklch(0.56 0.2 291);
+  --primary-foreground: oklch(0.99 0.005 280);
+  --primary-2: oklch(0.62 0.16 255);
+
+  --secondary: oklch(0.94 0.018 285);
+  --secondary-foreground: oklch(0.32 0.07 285);
+  --muted: oklch(0.94 0.014 270);
+  --muted-foreground: oklch(0.48 0.035 275);
+  --accent: oklch(0.91 0.035 285);
+  --accent-foreground: oklch(0.32 0.07 285);
+
+  --destructive: oklch(0.6 0.21 22);
+  --destructive-foreground: oklch(0.99 0.005 25);
+  --success: oklch(0.68 0.15 158);
+  --warning: oklch(0.78 0.15 78);
+
+  --border: oklch(0.35 0.08 280 / 12%);
+  --input: oklch(0.4 0.06 280 / 16%);
+  --ring: oklch(0.58 0.16 288);
+
+  --sidebar: oklch(1 0 0 / 78%);
+  --sidebar-foreground: oklch(0.22 0.04 280);
+  --sidebar-border: oklch(0.35 0.08 280 / 12%);
+
+  --gauge-track: oklch(0.88 0.02 280);
+  --map-line: oklch(0.86 0.02 280);
+
+  --glow-primary: oklch(0.56 0.2 291 / 30%);
+  --glow-success: oklch(0.68 0.15 158 / 30%);
+  --glow-warning: oklch(0.78 0.15 78 / 32%);
+  --glow-danger: oklch(0.6 0.21 22 / 30%);
+
+  --blob-a: oklch(0.72 0.16 291 / 22%);
+  --blob-b: oklch(0.7 0.14 250 / 18%);
+  --blob-c: oklch(0.78 0.14 320 / 14%);
+  --particle-color: oklch(0.4 0.1 285 / 45%);
+  --grid-line: oklch(0.4 0.08 280 / 6%);
+
+  --shadow-soft: 0 1px 2px oklch(0.3 0.05 280 / 5%), 0 8px 24px -8px oklch(0.3 0.08 280 / 14%);
+  --shadow-soft-lg: 0 4px 10px oklch(0.3 0.05 280 / 6%), 0 20px 48px -14px oklch(0.3 0.1 280 / 20%);
 }
 
 @layer base {
@@ -137,6 +223,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.4s ease;
   }
   ::-webkit-scrollbar {
     width: 8px;
@@ -152,28 +239,420 @@
   }
 }
 
-/* soft card look used across the app: shadow instead of a hard border */
+/* ---------------------------------------------------------------------- */
+/* Glass surfaces                                                          */
+/* ---------------------------------------------------------------------- */
+
 .soft-card {
-  border: 1px solid transparent;
+  border: 1px solid var(--color-border);
   box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(20px);
 }
 
 .soft-card-lg {
-  border: 1px solid transparent;
+  border: 1px solid var(--color-border);
   box-shadow: var(--shadow-soft-lg);
+  backdrop-filter: blur(24px);
+}
+
+.glass-panel {
+  background: var(--color-sidebar);
+  border: 1px solid var(--sidebar-border);
+  backdrop-filter: blur(22px);
+}
+
+.glow-primary {
+  box-shadow: 0 0 0 1px var(--color-border), 0 10px 30px -10px var(--glow-primary);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Micro-interactions                                                      */
+/* ---------------------------------------------------------------------- */
+
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+}
+
+.press-scale {
+  transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.2s ease;
+}
+.press-scale:active {
+  transform: scale(0.97);
+}
+
+/* Button glow on hover — primary variant */
+.btn-glow {
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+              filter 0.2s ease;
+}
+.btn-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px -6px var(--glow-primary), 0 0 0 1px var(--color-border);
+  filter: brightness(1.08);
+}
+.btn-glow:active {
+  transform: scale(0.97) translateY(0);
+  filter: brightness(0.96);
+}
+
+.card-enter {
+  animation: card-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Staggered card arrivals (indices 0–5) — calm, gradual sequence ───── */
+.card-enter-0 { animation: card-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both; }
+.card-enter-1 { animation: card-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.10s both; }
+.card-enter-2 { animation: card-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both; }
+.card-enter-3 { animation: card-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both; }
+.card-enter-4 { animation: card-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both; }
+.card-enter-5 { animation: card-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.34s both; }
+
+/* ── Page-level arrival animations — calm & smooth ─────────────────────── */
+.page-arrive {
+  animation: page-arrive 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both;
+}
+@keyframes page-arrive {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.topbar-arrive {
+  animation: topbar-arrive 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes topbar-arrive {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.sidebar-arrive {
+  animation: sidebar-arrive 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes sidebar-arrive {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0);     }
+}
+
+/* Hero / gauge: gentle, calm presence that arrives seamlessly */
+.hero-arrive {
+  animation: card-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+
+/* ── Scroll-triggered reveal — below-the-fold landing sections ─────────
+   Unlike .card-enter* (plays once on mount, so it's long finished by the
+   time you scroll to it), this starts hidden and animates in the first
+   time the element crosses into view (see Reveal.tsx). */
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 24px));
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Status animations ──────────────────────────────────────────────────── */
+.status-dot {
+  position: relative;
+  display: inline-block;
+}
+.status-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  background: currentColor;
+  opacity: 0.35;
+  animation: status-pulse 2s ease-out infinite;
+}
+@keyframes status-pulse {
+  0%   { transform: scale(0.6); opacity: 0.5; }
+  70%  { transform: scale(1.8); opacity: 0;   }
+  100% { transform: scale(1.8); opacity: 0;   }
+}
+
+/* Calm breathing — for live connection dots (no expand, just gentle opacity) */
+.status-breathe {
+  animation: breathe 3.2s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+/* One-shot pulse — fires when Live Monitor connects; re-triggers via key change */
+.connection-pulse-once {
+  position: relative;
+}
+.connection-pulse-once::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 9999px;
+  background: currentColor;
+  opacity: 0;
+  animation: conn-pulse-once 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  pointer-events: none;
+}
+@keyframes conn-pulse-once {
+  0%   { transform: scale(0.6); opacity: 0.6; }
+  60%  { transform: scale(2.2); opacity: 0.1; }
+  100% { transform: scale(2.6); opacity: 0;   }
+}
+
+/* Warning attention — 2-cycle soft glow */
+.status-warn-pulse {
+  animation: warn-pulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) 2;
+}
+@keyframes warn-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 transparent;       }
+  40%       { box-shadow: 0 0 0 6px var(--glow-warning); }
+  70%       { box-shadow: 0 0 0 0 transparent;       }
+}
+
+/* Danger attention — 3-cycle firmer pulse, still professional */
+.status-danger-pulse {
+  animation: danger-pulse 1.4s cubic-bezier(0.4, 0, 0.6, 1) 3;
+}
+@keyframes danger-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 transparent;      }
+  35%       { box-shadow: 0 0 0 8px var(--glow-danger); }
+  65%       { box-shadow: 0 0 0 2px var(--glow-danger); }
+}
+
+/* ── Navigation icon micro-hover ───────────────────────────────────────── */
+/* Parent <Link> needs class "nav-icon-group"; icon gets class "nav-icon"  */
+.nav-icon-group .nav-icon {
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.nav-icon-group:hover .nav-icon {
+  transform: translateY(-1.5px);
+}
+
+/* Active nav indicator accent bar transitions smoothly */
+.nav-accent-bar {
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .signal-line {
   animation: signal-scroll 6s linear infinite;
 }
 @keyframes signal-scroll {
-  0% { stroke-dasharray: 4 4; stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: -40; }
+  0%   { stroke-dasharray: 4 4; stroke-dashoffset: 0;   }
+  100% { stroke-dashoffset: -40;                        }
+}
+
+.spin-slow {
+  animation: spin 12s linear infinite;
+}
+
+.gradient-text {
+  background: linear-gradient(120deg, var(--color-primary), var(--primary-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Ambient animated background                                            */
+/* ---------------------------------------------------------------------- */
+
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--color-background);
+}
+
+/* Fine dot-grid — more refined than lines, masked to fade at edges */
+.ambient-dotgrid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 20%, transparent 80%);
+  opacity: 0.6;
+}
+
+/* Subtle horizontal aurora shimmer line at the top — sky horizon feel */
+.ambient-bg::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-primary) 35%,
+    var(--primary-2) 50%,
+    var(--color-primary) 65%,
+    transparent 100%
+  );
+  opacity: 0.35;
+  animation: aurora-sweep 12s ease-in-out infinite;
+  filter: blur(1px);
+}
+@keyframes aurora-sweep {
+  0%, 100% { transform: translateX(-20%); opacity: 0.18; }
+  50%       { transform: translateX(20%);  opacity: 0.42; }
+}
+
+.ambient-blob {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform;
+}
+
+.ambient-blob--a {
+  top: -18%;
+  left: -12%;
+  width: 55vw;
+  height: 55vw;
+  background: var(--blob-a);
+  filter: blur(80px);
+  animation: float-a 36s ease-in-out infinite;
+}
+.ambient-blob--b {
+  bottom: -22%;
+  right: -14%;
+  width: 60vw;
+  height: 60vw;
+  background: var(--blob-b);
+  filter: blur(90px);
+  animation: float-b 44s ease-in-out infinite;
+}
+.ambient-blob--c {
+  top: 30%;
+  left: 52%;
+  width: 40vw;
+  height: 40vw;
+  background: var(--blob-c);
+  filter: blur(70px);
+  animation: float-c 30s ease-in-out infinite;
+}
+
+/* 4th blob: upper-right slow drift */
+.ambient-blob--d {
+  top: 5%;
+  right: 4%;
+  width: 26vw;
+  height: 26vw;
+  background: var(--blob-a);
+  opacity: 0.6;
+  filter: blur(60px);
+  animation: float-d 50s ease-in-out infinite;
+}
+
+/* 5th blob: center-bottom aurora pulse — the "engine warmth" */
+.ambient-blob--e {
+  bottom: -10%;
+  left: 25%;
+  width: 50vw;
+  height: 30vw;
+  background: var(--blob-b);
+  opacity: 0.45;
+  filter: blur(100px);
+  animation: float-e 38s ease-in-out infinite;
+}
+
+@keyframes float-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(5vw, 6vh) scale(1.06); }
+  66%       { transform: translate(2vw, 10vh) scale(1.02); }
+}
+@keyframes float-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%       { transform: translate(-8vw, -5vh) scale(1.07); }
+  70%       { transform: translate(-4vw, -9vh) scale(0.98); }
+}
+@keyframes float-c {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(-5vw, 6vh) scale(0.93); }
+}
+@keyframes float-d {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-3vw, 5vh) scale(1.08); }
+  66%       { transform: translate(3vw, -3vh) scale(0.96); }
+}
+@keyframes float-e {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(4vw, -4vh) scale(1.1); }
+}
+
+.ambient-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+}
+
+/* dark-mode-only "night sky" treatment for embedded OpenStreetMap tiles, so the
+   map matches the rest of the futuristic UI instead of a bright daylight square */
+.dark .map-tint .leaflet-tile-pane {
+  filter: brightness(0.62) contrast(1.05) saturate(0.35) invert(0.92) hue-rotate(185deg);
+}
+.dark .map-tint .leaflet-control-attribution,
+.dark .map-tint .leaflet-control-zoom a {
+  background: var(--color-card);
+  color: var(--color-foreground);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Homepage — Philosophy marquee strip                                     */
+/* ---------------------------------------------------------------------- */
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Outer container must have overflow:hidden (set inline or via Tailwind)  */
+.marquee-track {
+  display: inline-flex;
+  width: max-content;
+  animation: marquee-scroll 36s linear infinite;
+  will-change: transform;
+}
+
+/* Pause on hover for accessibility and user comfort */
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Global smooth scroll for landing page anchor links                      */
+/* ---------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
 }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .marquee-track {
+    animation: none !important;
   }
 }

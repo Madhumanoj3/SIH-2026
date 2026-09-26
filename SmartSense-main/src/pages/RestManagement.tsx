@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle2, Compass, Loader2, LocateFixed, MapPin, Navigation, Navigation2, Route, RefreshCw, ShieldCheck, WifiOff, X } from "lucide-react";
-import { Button, Card, DashboardShell, PageIntro, Pill, SectionLabel } from "@/components/AppShell";
+import { AnimatedNumber, Button, Card, DashboardShell, PageIntro, Pill, SectionLabel } from "@/components/AppShell";
 import { restDecisionLabelKey, restStops, restSuitabilityScore, slackMinutesToDeadline, useSmartSense } from "@/lib/smartsense";
 import { cn, formatDuration } from "@/lib/utils";
 import { googleMapsDirectionsUrl, useGeolocation, useOnlineStatus } from "@/lib/geolocation";
@@ -315,7 +315,9 @@ export default function RestManagement() {
             {top.isDemo && <Pill tone="warn">Demo data</Pill>}
           </div>
           <div className="mt-4 flex items-end gap-2">
-            <span className="font-display text-6xl font-extrabold">{top.score}</span>
+            <span className="font-display text-6xl font-extrabold tabular-nums">
+              <AnimatedNumber value={top.score} />
+            </span>
             <span className="mb-2 font-mono text-sm text-muted-foreground">/ 100</span>
           </div>
           <div className="mt-5 space-y-3">

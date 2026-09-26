@@ -2,8 +2,8 @@ import { Database } from "lucide-react";
 
 export default function DatabaseRequired() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 text-foreground">
-      <div className="soft-card-lg w-full max-w-lg rounded-[1.75rem] bg-card p-8 text-center">
+    <div className="flex min-h-screen items-center justify-center px-4 text-foreground">
+      <div className="soft-card-lg card-enter w-full max-w-lg rounded-[1.75rem] bg-card p-8 text-center">
         <span className="mx-auto grid size-14 place-items-center rounded-full bg-warning/15 text-warning">
           <Database size={22} />
         </span>

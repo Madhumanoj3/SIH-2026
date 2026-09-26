@@ -186,25 +186,27 @@ export default function LiveMonitor() {
       />
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card>
+        <Card staggerIndex={0}>
           <div className="flex items-center justify-between">
             <SectionLabel>{t("signalStatus")}</SectionLabel>
-            <Wifi size={14} className="text-success" />
+            <span className="connection-pulse-once relative text-success">
+              <Wifi size={14} />
+            </span>
           </div>
           <p className="mt-2 font-display text-2xl font-extrabold">{t("connected")}</p>
           <p className="mt-1 text-xs text-muted-foreground">EEG + EOG wearable</p>
         </Card>
-        <Card>
+        <Card staggerIndex={1}>
           <SectionLabel>{t("signalQuality")}</SectionLabel>
           <p className="mt-2 font-display text-2xl font-extrabold">{Math.round((state.eegQuality + state.eogQuality) / 2)}%</p>
           <p className="mt-1 text-xs text-muted-foreground">Combined EEG/EOG confidence</p>
         </Card>
-        <Card tone={safetyTone === "danger" ? "danger" : safetyTone === "warn" ? "warn" : undefined}>
+        <Card tone={safetyTone === "danger" ? "danger" : safetyTone === "warn" ? "warn" : undefined} staggerIndex={2}>
           <SectionLabel>Current Driver State</SectionLabel>
           <p className="mt-2 font-display text-2xl font-extrabold">{t(vigilanceLabelKey[state.vigilanceState])}</p>
           <p className="mt-1 text-xs text-muted-foreground">Vigilance {state.vigilanceScore}/100</p>
         </Card>
-        <Card>
+        <Card staggerIndex={3}>
           <div className="flex items-center justify-between">
             <SectionLabel>{t("wearableConnection")}</SectionLabel>
             <Battery size={14} className="text-muted-foreground" />
@@ -215,7 +217,7 @@ export default function LiveMonitor() {
       </section>
 
       <section className="grid gap-6 lg:grid-cols-2">
-        <Card>
+        <Card staggerIndex={4}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <span className="grid size-10 place-items-center rounded-xl bg-primary/10 text-primary">
@@ -243,7 +245,7 @@ export default function LiveMonitor() {
           </div>
         </Card>
 
-        <Card>
+        <Card staggerIndex={5}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <span className="grid size-10 place-items-center rounded-xl bg-success/15 text-success">
@@ -251,7 +253,7 @@ export default function LiveMonitor() {
               </span>
               <div>
                 <SectionLabel>{t("eogEye")}</SectionLabel>
-                <h3 className="font-display text-lg font-bold">Eye movement & blink stream</h3>
+                <h3 className="font-display text-lg font-bold">Eye movement &amp; blink stream</h3>
               </div>
             </div>
             <Pill tone={state.eogQuality > 70 ? "good" : "warn"}>{state.eogQuality}%</Pill>

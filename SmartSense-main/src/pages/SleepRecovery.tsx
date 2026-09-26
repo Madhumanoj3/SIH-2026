@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AlertTriangle, ArrowUpRight, CarFront, CheckCircle2, Loader2, Moon, Sparkles, Sunrise } from "lucide-react";
-import { Button, Card, DashboardShell, PageIntro, Pill, SectionLabel, Waveform } from "@/components/AppShell";
+import { AnimatedNumber, Button, Card, DashboardShell, PageIntro, Pill, SectionLabel, Waveform } from "@/components/AppShell";
 import { nextOccurrenceOf, sleepStateFriendly, useSmartSense, type SleepState } from "@/lib/smartsense";
 import restSamples from "@/lib/demoSamples/restSamples.json";
 
@@ -123,7 +123,9 @@ export default function SleepRecovery() {
       <section className="grid gap-6 sm:grid-cols-3">
         <Card>
           <SectionLabel>{t("sleepDuration")}</SectionLabel>
-          <p className="mt-2 font-display text-3xl font-extrabold">{state.restSessionMinutes} min</p>
+          <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">
+            <AnimatedNumber value={state.restSessionMinutes} /> min
+          </p>
         </Card>
         <Card>
           <SectionLabel>{t("sleepState")}</SectionLabel>
@@ -254,12 +256,16 @@ export default function SleepRecovery() {
             <SectionLabel>Recovery comparison</SectionLabel>
             <div className="mt-6 flex items-end gap-5">
               <div>
-                <p className="font-display text-5xl font-extrabold text-muted-foreground">{state.recoveryBefore}</p>
+                <p className="font-display text-5xl font-extrabold tabular-nums text-muted-foreground">
+                  <AnimatedNumber value={state.recoveryBefore} />
+                </p>
                 <p className="mt-1 text-[11px] text-muted-foreground">{t("recoveryBefore")}</p>
               </div>
               <ArrowUpRight className="mb-5 text-success" size={24} />
               <div>
-                <p className="font-display text-6xl font-extrabold text-success">{state.recoveryAfter}</p>
+                <p className="font-display text-6xl font-extrabold tabular-nums text-success" style={{ filter: "drop-shadow(0 0 14px var(--glow-success))" }}>
+                  <AnimatedNumber value={state.recoveryAfter} />
+                </p>
                 <p className="mt-1 text-[11px] text-muted-foreground">{t("recoveryAfter")}</p>
               </div>
             </div>

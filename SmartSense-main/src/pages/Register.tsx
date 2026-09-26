@@ -15,7 +15,7 @@ export default function Register() {
   const [error, setError] = useState<string | null>(null);
   const [checkEmail, setCheckEmail] = useState(false);
 
-  if (status === "signed-in") return <Navigate to="/" replace />;
+  if (status === "signed-in") return <Navigate to="/overview" replace />;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -43,15 +43,15 @@ export default function Register() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-10 text-foreground">
-      <div className="w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center px-4 py-10 text-foreground">
+      <div className="card-enter w-full max-w-md">
         <div className="mb-8 flex items-center justify-center gap-3">
-          <span className="grid size-11 place-items-center rounded-2xl bg-primary text-primary-foreground">
-            <Heart size={20} fill="currentColor" strokeWidth={0} />
+          <span className="glow-primary grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-primary to-[var(--primary-2)] text-primary-foreground">
+            <Heart size={21} fill="currentColor" strokeWidth={0} />
           </span>
           <div className="text-center">
-            <p className="text-[16px] font-bold leading-none tracking-tight">SmartSense</p>
-            <p className="mt-1 text-[12px] text-muted-foreground">Predict · Rest · Recover</p>
+            <p className="font-display text-[17px] font-bold leading-none tracking-tight">SmartSense</p>
+            <p className="mt-1.5 text-[12px] text-muted-foreground">Predict · Rest · Recover</p>
           </div>
         </div>
 

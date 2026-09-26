@@ -32,17 +32,17 @@ const OSRM_ROUTE_ENDPOINT = "https://router.project-osrm.org/route/v1/driving";
 function driverDivIcon() {
   return L.divIcon({
     className: "smartsense-map-marker",
-    html: `<span style="display:block;width:16px;height:16px;border-radius:9999px;background:#4f46e5;box-shadow:0 0 0 8px rgba(79,70,229,0.18);border:2px solid #fff;"></span>`,
+    html: `<span style="display:block;width:16px;height:16px;border-radius:9999px;background:#8b5cf6;box-shadow:0 0 0 8px rgba(139,92,246,0.22),0 0 16px rgba(139,92,246,0.6);border:2px solid #fff;"></span>`,
     iconSize: [16, 16],
     iconAnchor: [8, 8],
   });
 }
 
 function zoneDivIcon(isTop: boolean) {
-  const color = isTop ? "#4f46e5" : "#f59e0b";
+  const color = isTop ? "#8b5cf6" : "#f59e0b";
   return L.divIcon({
     className: "smartsense-map-marker",
-    html: `<span style="display:block;width:14px;height:14px;border-radius:9999px;background:${color};box-shadow:0 0 0 6px ${color}2b;border:2px solid #fff;"></span>`,
+    html: `<span style="display:block;width:14px;height:14px;border-radius:9999px;background:${color};box-shadow:0 0 0 6px ${color}2b,0 0 12px ${color}99;border:2px solid #fff;"></span>`,
     iconSize: [14, 14],
     iconAnchor: [7, 7],
   });
@@ -131,7 +131,7 @@ export default function SafeZoneMap({ driverPosition, zones, routeToZoneId, clas
           ];
         }
         const line = L.polyline(latlngs, {
-          color: "#4f46e5",
+          color: "#8b5cf6",
           weight: 4,
           opacity: 0.85,
           dashArray: isFallbackStraightLine ? "6 8" : undefined,
@@ -146,5 +146,5 @@ export default function SafeZoneMap({ driverPosition, zones, routeToZoneId, clas
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [driverKey, zonesKey, routeToZoneId]);
 
-  return <div ref={containerRef} className={className} />;
+  return <div ref={containerRef} className={["map-tint", className].filter(Boolean).join(" ")} />;
 }

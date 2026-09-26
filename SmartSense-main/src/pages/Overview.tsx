@@ -41,7 +41,7 @@ export default function Overview() {
 
       <section className="grid gap-6 xl:grid-cols-12">
         <div className="xl:col-span-5">
-          <Card className="h-full">
+          <Card className="h-full hero-arrive" staggerIndex={0}>
             <div className="flex items-start justify-between">
               <div>
                 <SectionLabel>{t("currentVigilance")}</SectionLabel>
@@ -61,7 +61,7 @@ export default function Overview() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 xl:col-span-7">
-          <Card>
+          <Card staggerIndex={1}>
             <SectionLabel>{t("todaySummary")}</SectionLabel>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <Metric label={t("drivingDuration")} value={formatDuration(state.drivingMinutesToday)} />
@@ -75,12 +75,12 @@ export default function Overview() {
             </div>
             <Link to="/live-monitor">
               <Button className="mt-4 w-full">
-                {t("openLiveMonitor")} <ArrowRight size={14} />
+                {t("openLiveMonitor")} <ArrowRight size={14} className="transition-transform duration-150 group-hover:translate-x-0.5" />
               </Button>
             </Link>
           </Card>
 
-          <Card className="flex flex-col gap-4">
+          <Card className="flex flex-col gap-4" staggerIndex={2}>
             <div className="flex items-center justify-between">
               <SectionLabel>{t("wearableConnection")}</SectionLabel>
               <Pill tone={connected ? "good" : "warn"}>{connected ? t("connected") : "Not paired"}</Pill>
@@ -109,7 +109,7 @@ export default function Overview() {
             </p>
             <Link to="/rest">
               <Button variant="secondary" className="w-full">
-                {t("findRestLocation")} <Navigation size={14} />
+                {t("findRestLocation")} <Navigation size={14} className="transition-transform duration-150 group-hover:translate-x-0.5" />
               </Button>
             </Link>
           </Card>

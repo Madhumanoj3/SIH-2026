@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AlertTriangle, Gauge, Loader2, TrendingDown, TrendingUp, Minus } from "lucide-react";
-import { Button, Card, DashboardShell, PageIntro, Pill, SectionLabel } from "@/components/AppShell";
+import { AlertTriangle, Gauge as GaugeIcon, Loader2, TrendingDown, TrendingUp, Minus } from "lucide-react";
+import { AnimatedNumber, Button, Card, DashboardShell, Gauge, PageIntro, Pill, SectionLabel } from "@/components/AppShell";
 import { useSmartSense, vigilanceLabelKey, trendLabelKey, type VigilanceState } from "@/lib/smartsense";
 import driveSamples from "@/lib/demoSamples/driveSamples.json";
 
@@ -77,19 +77,15 @@ export default function Drowsiness() {
       />
 
       <section className="grid gap-6 xl:grid-cols-12">
-        <Card className="xl:col-span-4">
+        <Card className="flex flex-col items-center text-center xl:col-span-4">
           <SectionLabel>{t("drowsinessScore")}</SectionLabel>
-          <div className="mt-3 flex items-end gap-2">
-            <span className="font-display text-6xl font-extrabold">{state.vigilanceScore}</span>
-            <span className="mb-2 text-sm text-muted-foreground">/ 100</span>
+          <div className="mt-3">
+            <Gauge score={state.vigilanceScore} size={180} />
           </div>
           <Pill tone={state.vigilanceScore > 69 ? "good" : state.vigilanceScore > 39 ? "warn" : "danger"}>
             {t(vigilanceLabelKey[state.vigilanceState])}
           </Pill>
-          <div className="mt-5 h-2 rounded-full bg-secondary">
-            <div className="h-full rounded-full bg-primary transition-all duration-500" style={{ width: `${state.vigilanceScore}%` }} />
-          </div>
-          <div className="mt-5 flex items-center gap-2 text-sm text-warning">
+          <div className="mt-4 flex items-center gap-2 text-sm text-warning">
             <TrendIcon size={16} /> {t(trendLabelKey[state.trend])}
           </div>
         </Card>
@@ -113,7 +109,7 @@ export default function Drowsiness() {
         <Card>
           <div className="flex items-center gap-3">
             <span className="grid size-10 place-items-center rounded-xl bg-primary/10 text-primary">
-              <Gauge size={19} />
+              <GaugeIcon size={19} />
             </span>
             <div>
               <SectionLabel>ML Backend demo — Drive Mode vigilance</SectionLabel>
@@ -133,7 +129,7 @@ export default function Drowsiness() {
                 </>
               ) : (
                 <>
-                  Analyze Drive Vigilance <Gauge size={15} />
+                  Analyze Drive Vigilance <GaugeIcon size={15} />
                 </>
               )}
             </Button>
@@ -156,7 +152,7 @@ export default function Drowsiness() {
         <Card>
           <div className="flex items-center gap-3">
             <span className="grid size-10 place-items-center rounded-xl bg-primary/10 text-primary">
-              <Gauge size={19} />
+              <GaugeIcon size={19} />
             </span>
             <div>
               <SectionLabel>Live ML Backend — Drive Mode vigilance</SectionLabel>
@@ -180,7 +176,9 @@ export default function Drowsiness() {
           ) : state.liveDrivePrediction ? (
             <div className="mt-3 flex items-end gap-6">
               <div>
-                <p className="font-display text-4xl font-extrabold">{state.liveDrivePrediction.vigilance.toFixed(1)}</p>
+                <p className="font-display text-4xl font-extrabold tabular-nums">
+                  <AnimatedNumber value={state.liveDrivePrediction.vigilance} decimals={1} />
+                </p>
                 <p className="text-xs text-muted-foreground">Estimated Vigilance / 100</p>
               </div>
               <div>
