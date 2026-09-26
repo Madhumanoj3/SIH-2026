@@ -3,10 +3,12 @@ import {
   Activity,
   ArrowRight,
   Brain,
+  Cpu,
   Eye,
   Heart,
   Radio,
   Shield,
+  ShieldCheck,
   Sparkles,
   Wifi,
   Zap,
@@ -14,6 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import { HeroSection } from "@/components/HeroSection5";
 import Reveal from "@/components/Reveal";
+import { CardStack, type CardStackItem } from "@/components/ui/card-stack";
 
 /* ═══════════════════════════════════════════════════════════════════════ */
 /* Philosophy Infinite Strip                                               */
@@ -159,38 +162,74 @@ function HowItWorks() {
 
 const TECH_CARDS = [
   {
-    icon:  Brain,
-    color: "text-primary",
-    bg:    "bg-primary/12",
-    title: "EEG Monitoring",
-    desc:  "Electroencephalography captures brainwave patterns. Delta waves and sleep spindles reveal true cognitive state beyond visible behaviour.",
+    icon:     Brain,
+    gradient: "bg-gradient-to-br from-primary to-[var(--primary-2)]",
+    title:    "EEG Monitoring",
+    desc:     "Electroencephalography captures brainwave patterns. Delta waves and sleep spindles reveal true cognitive state beyond visible behaviour.",
   },
   {
-    icon:  Eye,
-    color: "text-success",
-    bg:    "bg-success/12",
-    title: "EOG Eye Tracking",
-    desc:  "Electrooculography tracks PERCLOS (eye closure) and slow eye movements — key indicators of microsleep onset, caught early.",
+    icon:     Eye,
+    gradient: "bg-gradient-to-br from-success to-primary",
+    title:    "EOG Eye Tracking",
+    desc:     "Electrooculography tracks PERCLOS (eye closure) and slow eye movements — key indicators of microsleep onset, caught early.",
   },
   {
-    icon:  Wifi,
-    color: "text-[var(--primary-2)]",
-    bg:    "bg-primary/12",
-    title: "Wi-Fi Telemetry",
-    desc:  "An ESP32-powered wearable streams 128 Hz signal data over Wi-Fi in real time — no cloud dependency, no latency.",
+    icon:     Wifi,
+    gradient: "bg-gradient-to-tr from-[var(--primary-2)] to-primary",
+    title:    "Wi-Fi Telemetry",
+    desc:     "An ESP32-powered wearable streams 128 Hz signal data over Wi-Fi in real time — no cloud dependency, no latency.",
   },
   {
-    icon:  Zap,
-    color: "text-warning",
-    bg:    "bg-warning/12",
-    title: "ML Inference",
-    desc:  "Multimodal fusion models produce a continuous vigilance score — not a binary alarm — so you see the trend before it becomes a crisis.",
+    icon:     Zap,
+    gradient: "bg-gradient-to-br from-warning to-primary",
+    title:    "ML Inference",
+    desc:     "Multimodal fusion models produce a continuous vigilance score — not a binary alarm — so you see the trend before it becomes a crisis.",
+  },
+  {
+    icon:     Cpu,
+    gradient: "bg-gradient-to-tr from-primary via-[var(--primary-2)] to-success",
+    title:    "Edge Compute",
+    desc:     "Inference runs directly on the wearable's onboard processor — sub-second response, even with no connection.",
+  },
+  {
+    icon:     ShieldCheck,
+    gradient: "bg-gradient-to-br from-success to-[var(--primary-2)]",
+    title:    "Privacy by Design",
+    desc:     "Raw EEG/EOG signals never leave the device unencrypted — only the computed vigilance score is ever transmitted.",
   },
 ] as const;
 
+type TechCard = (typeof TECH_CARDS)[number];
+type TechCardStackItem = CardStackItem & { card: TechCard };
+
+const TECH_CARD_STACK_ITEMS: TechCardStackItem[] = TECH_CARDS.map((card) => ({
+  id: card.title,
+  title: card.title,
+  description: card.desc,
+  card,
+}));
+
+// Vivid, on-brand gradient card faces (matching the reference component's own
+// "colorful photo + white text overlay" composition) instead of external
+// stock imagery — no unrelated assets, same tokens used across the rest of
+// the site (--primary / --primary-2 / --success / --warning).
+function TechCardFace({ item }: { item: TechCardStackItem; active: boolean }) {
+  const { card } = item;
+  return (
+    <div className={cn("relative flex h-full w-full flex-col justify-end overflow-hidden p-6 text-white", card.gradient)}>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
+      <div className="relative z-10 mb-4 grid size-11 shrink-0 place-items-center rounded-2xl bg-white/20 backdrop-blur-sm">
+        <card.icon size={20} className="text-white" />
+      </div>
+      <h3 className="relative z-10 font-display text-lg font-bold">{card.title}</h3>
+      <p className="relative z-10 mt-2.5 text-sm leading-relaxed text-white/85">{card.desc}</p>
+    </div>
+  );
+}
+
 function TechSection() {
   return (
-    <section id="technology" className="relative bg-secondary/25 py-24 lg:py-32">
+    <section id="technology" className="relative overflow-hidden bg-secondary/25 py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Technology</p>
@@ -202,19 +241,24 @@ function TechSection() {
           </p>
         </Reveal>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {TECH_CARDS.map((card, i) => (
-            <Reveal key={card.title} delay={i * 80}>
-              <div className="soft-card group rounded-[1.75rem] bg-card p-6 transition hover:-translate-y-1">
-                <div className={cn("mb-4 grid size-11 place-items-center rounded-2xl", card.bg)}>
-                  <card.icon size={20} className={card.color} />
-                </div>
-                <h3 className="font-display text-base font-bold">{card.title}</h3>
-                <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">{card.desc}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+        <Reveal delay={100} className="mt-14">
+          <CardStack
+            items={TECH_CARD_STACK_ITEMS}
+            renderCard={(item, state) => <TechCardFace item={item} active={state.active} />}
+            cardWidth={320}
+            cardHeight={260}
+            overlap={0.55}
+            spreadDeg={34}
+            perspectivePx={1000}
+            depthPx={90}
+            tiltXDeg={8}
+            maxVisible={5}
+            autoAdvance
+            intervalMs={3600}
+            pauseOnHover
+            showDots
+          />
+        </Reveal>
       </div>
     </section>
   );
