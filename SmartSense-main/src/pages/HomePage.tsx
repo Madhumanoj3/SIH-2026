@@ -1,268 +1,19 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Activity,
   ArrowRight,
   Brain,
-  ChevronDown,
   Eye,
   Heart,
-  Menu,
   Radio,
   Shield,
   Sparkles,
   Wifi,
-  X,
   Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import DnaHelixHero from "@/components/DnaHelixHero";
+import { HeroSection } from "@/components/HeroSection5";
 import Reveal from "@/components/Reveal";
-import { useAuthSession } from "@/lib/auth";
-
-/* ═══════════════════════════════════════════════════════════════════════ */
-/* Navbar                                                                  */
-/* ═══════════════════════════════════════════════════════════════════════ */
-
-const NAV_LINKS = [
-  { label: "Home",        href: "#top"         },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Technology",  href: "#technology"  },
-  { label: "About",       href: "#about"       },
-];
-
-function LandingNav() {
-  const { status } = useAuthSession();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 32);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Close mobile menu on resize to desktop
-  useEffect(() => {
-    const onResize = () => { if (window.innerWidth >= 768) setMobileOpen(false); };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-500",
-        scrolled
-          ? "bg-background/80 backdrop-blur-2xl border-b border-border/40 shadow-[0_2px_24px_-6px_oklch(0_0_0/22%)]"
-          : "bg-transparent",
-      )}
-    >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-4 sm:px-8 lg:py-5">
-        {/* ── Logo ── */}
-        <Link to="/" className="flex shrink-0 items-center gap-2.5 group">
-          <span className="glow-primary grid size-9 place-items-center rounded-xl bg-gradient-to-br from-primary to-[var(--primary-2)] text-primary-foreground transition group-hover:brightness-110">
-            <Heart size={16} fill="currentColor" strokeWidth={0} />
-          </span>
-          <span className={cn("font-display text-[15px] font-bold tracking-tight", !scrolled ? "text-white" : "text-foreground")}>SmartSense</span>
-        </Link>
-
-        {/* ── Desktop nav links ── */}
-        <ul className="hidden items-center gap-0.5 md:flex">
-          {NAV_LINKS.map((link) => (
-            <li key={link.label}>
-              <a
-                href={link.href}
-                className={cn(
-                  "rounded-full px-4 py-2 text-sm font-medium transition-all duration-200",
-                  scrolled
-                    ? "text-muted-foreground hover:bg-accent/70 hover:text-foreground"
-                    : "text-white/75 hover:bg-white/10 hover:text-white",
-                )}
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        {/* ── Desktop CTAs ── */}
-        <div className="hidden items-center gap-3 md:flex">
-          {status !== "signed-in" && (
-            <Link
-              to="/login"
-              className={cn(
-                "text-sm font-medium transition",
-                scrolled ? "text-muted-foreground hover:text-foreground" : "text-white/75 hover:text-white",
-              )}
-            >
-              Sign in
-            </Link>
-          )}
-          <Link
-            to="/overview"
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-primary to-[var(--primary-2)] px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[0_4px_20px_-6px_var(--glow-primary)] transition hover:brightness-110 hover:-translate-y-px active:scale-95"
-          >
-            {status === "signed-in" ? "Dashboard" : "Dashboard"} <ArrowRight size={13} />
-          </Link>
-        </div>
-
-        {/* ── Mobile hamburger ── */}
-        <button
-          onClick={() => setMobileOpen((o) => !o)}
-          className={cn(
-            "grid size-9 place-items-center rounded-xl border transition md:hidden",
-            scrolled || mobileOpen
-              ? "border-border/50 bg-secondary/50 text-muted-foreground hover:bg-accent"
-              : "border-white/25 bg-white/10 text-white hover:bg-white/20",
-          )}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileOpen}
-        >
-          {mobileOpen ? <X size={17} /> : <Menu size={17} />}
-        </button>
-      </nav>
-
-      {/* ── Mobile dropdown ── */}
-      <div
-        className={cn(
-          "overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out md:hidden",
-          mobileOpen ? "max-h-[480px] opacity-100" : "max-h-0 opacity-0",
-        )}
-      >
-        <div className="border-t border-border/40 bg-background/90 backdrop-blur-2xl px-5 pb-6 pt-3">
-          <ul className="space-y-0.5">
-            {NAV_LINKS.map((link) => (
-              <li key={link.label}>
-                <a
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="block rounded-xl px-4 py-2.5 text-sm font-medium text-muted-foreground transition hover:bg-accent/70 hover:text-foreground"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-4 flex flex-col gap-2.5 border-t border-border/40 pt-4">
-            {status !== "signed-in" && (
-              <Link
-                to="/login"
-                onClick={() => setMobileOpen(false)}
-                className="block rounded-2xl border border-border/60 px-4 py-3 text-center text-sm font-medium transition hover:bg-accent/70"
-              >
-                Sign in
-              </Link>
-            )}
-            <Link
-              to="/overview"
-              onClick={() => setMobileOpen(false)}
-              className="block rounded-2xl bg-gradient-to-br from-primary to-[var(--primary-2)] px-4 py-3 text-center text-sm font-semibold text-primary-foreground shadow-[0_4px_20px_-6px_var(--glow-primary)]"
-            >
-              Open Dashboard
-            </Link>
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════ */
-/* Hero                                                                    */
-/* ═══════════════════════════════════════════════════════════════════════ */
-
-function HeroSection() {
-  return (
-    <section id="top" className="dark relative flex min-h-screen items-center justify-center overflow-hidden bg-background text-foreground">
-      {/* ── DNA double-helix backdrop (procedural, canvas-rendered) ── */}
-      <DnaHelixHero />
-
-      {/* ── Dark gradient overlay ── */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-black/15 to-background/95" />
-
-      {/* ── Radial primary glow ── */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-50"
-        style={{
-          background:
-            "radial-gradient(ellipse 65% 55% at 50% 62%, var(--glow-primary) 0%, transparent 70%)",
-        }}
-      />
-
-      {/* ── Hero content ── */}
-      <div className="page-arrive relative z-10 mx-auto max-w-5xl px-5 pt-28 pb-20 text-center sm:px-8 sm:pt-32">
-        {/* Eyebrow badge */}
-        <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/12 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-primary backdrop-blur-sm">
-          <Sparkles size={10} />
-          AI-Powered Driver Safety
-        </div>
-
-        {/* H1 — cinematic split */}
-        <h1 className="font-display font-extrabold leading-[1.04] tracking-tight">
-          <span className="block gradient-text text-[clamp(3rem,10vw,6.5rem)]">Stay Alert.</span>
-          <span className="block text-[clamp(3rem,10vw,6.5rem)] text-foreground">Stay Safe.</span>
-        </h1>
-
-        {/* Brand name sub-label */}
-        <p className="mt-4 font-display text-base font-semibold tracking-[0.18em] text-muted-foreground uppercase sm:text-lg">
-          SmartSense
-        </p>
-
-        {/* Description */}
-        <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-relaxed text-muted-foreground sm:text-[17px]">
-          AI-powered driver monitoring using{" "}
-          <span className="font-semibold text-foreground">EEG</span> and{" "}
-          <span className="font-semibold text-foreground">EOG</span>{" "}
-          signals to detect drowsiness and support safer driving.
-        </p>
-
-        {/* CTA buttons */}
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Link
-            to="/overview"
-            className="inline-flex items-center gap-2.5 rounded-full bg-gradient-to-br from-primary to-[var(--primary-2)] px-9 py-4 text-[15px] font-bold text-primary-foreground shadow-[0_8px_36px_-8px_var(--glow-primary)] transition hover:brightness-110 hover:-translate-y-0.5 active:scale-95"
-          >
-            Explore SmartSense <ArrowRight size={15} />
-          </Link>
-          <a
-            href="#how-it-works"
-            className="inline-flex items-center gap-2.5 rounded-full border border-border/60 bg-secondary/40 px-9 py-4 text-[15px] font-semibold text-foreground backdrop-blur-sm transition hover:bg-secondary/70 hover:-translate-y-0.5 active:scale-95"
-          >
-            How It Works
-          </a>
-        </div>
-
-        {/* Key stats */}
-        <div className="mt-16 flex flex-wrap items-center justify-center gap-10">
-          {[
-            { value: "128 Hz",    label: "EEG Sampling Rate"  },
-            { value: "< 2s",      label: "Detection Latency"  },
-            { value: "EEG + EOG", label: "Multimodal Signals" },
-          ].map((stat) => (
-            <div key={stat.label} className="flex flex-col items-center gap-1.5">
-              <span className="font-display text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
-                {stat.value}
-              </span>
-              <span className="text-xs font-medium text-muted-foreground">{stat.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Scroll chevron */}
-      <a
-        href="#philosophy"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-[11px] font-medium text-muted-foreground/60 transition hover:text-muted-foreground"
-        aria-label="Scroll down"
-      >
-        <span className="hidden sm:block">Scroll to explore</span>
-        <ChevronDown size={20} className="animate-bounce" />
-      </a>
-    </section>
-  );
-}
 
 /* ═══════════════════════════════════════════════════════════════════════ */
 /* Philosophy Infinite Strip                                               */
@@ -351,8 +102,26 @@ const HOW_STEPS = [
 
 function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-32">
-      <Reveal className="mx-auto max-w-2xl text-center">
+    <section id="how-it-works" className="dark relative overflow-hidden mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-32 text-foreground">
+      {/* The actual original Hero Section 5 video — the same CDN asset from
+          the reference template, before the truck hero replaced it there.
+          The canvas-based DnaHelixHero.tsx (still restored, just unused here)
+          was a misread of what "the spiral" meant; this black/gold clip is
+          the real thing. `dark` scopes this section's own tokens so the
+          existing text-foreground/text-primary/text-muted-foreground classes
+          below resolve to their light, on-dark values automatically —
+          no per-element color changes needed. */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="pointer-events-none absolute inset-0 size-full object-cover opacity-70"
+        src="https://cdn.21st.dev/assets/mirror/4b/4bc542f7d287b18d595da8e796a834608a5cf10ef3618e191bdc524ce712ba67.mp4"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-background/95" />
+
+      <Reveal className="relative z-10 mx-auto max-w-2xl text-center">
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">How It Works</p>
         <h2 className="mt-3 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
           Predict before it happens.
@@ -362,7 +131,7 @@ function HowItWorks() {
         </p>
       </Reveal>
 
-      <div className="mt-16 grid gap-6 sm:grid-cols-3">
+      <div className="relative z-10 mt-16 grid gap-6 sm:grid-cols-3">
         {HOW_STEPS.map((step, i) => (
           <Reveal key={step.num} delay={i * 90}>
             <div className="soft-card group relative rounded-[1.75rem] bg-card p-7 transition hover:-translate-y-1">
@@ -618,7 +387,6 @@ function LandingFooter() {
 export default function HomePage() {
   return (
     <div className="min-h-screen text-foreground antialiased">
-      <LandingNav />
       <HeroSection />
       <PhilosophyStrip />
       <HowItWorks />
