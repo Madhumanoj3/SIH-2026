@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
+import { motion, useScroll, useSpring, useTransform, type MotionValue } from "motion/react";
 
 /**
  * Original delivery-truck illustration, driven entirely by scroll progress
@@ -15,8 +15,11 @@ import { motion, useScroll, useTransform, type MotionValue } from "motion/react"
 function TruckIllustration({ progress }: { progress: MotionValue<number> }) {
   // Truck drives from the left edge to just short of the pin.
   const truckX = useTransform(progress, [0, 1], ["2%", "70%"]);
-  // A gentle scroll-linked bob — a function of progress, not time.
-  const truckY = useTransform(progress, (p) => Math.sin(p * Math.PI * 9) * 2.5);
+  // A gentle scroll-linked bob — a function of progress, not time. Frequency
+  // dropped from 9 to 2.5 cycles over the whole drive: at 9 cycles, even a
+  // spring-smoothed progress value still produced a fast up/down flicker
+  // that read as the truck "jumping" rather than a suspension-style bob.
+  const truckY = useTransform(progress, (p) => Math.sin(p * Math.PI * 2.5) * 2);
   // Wheels turn as the truck advances.
   const wheelRotate = useTransform(progress, [0, 1], [0, 1080]);
   // The dashed road scrolls backward under the truck as it advances.
@@ -215,8 +218,14 @@ const PIN_RELEASE_AT = (TRACK_HEIGHT_VH - 100) / TRACK_HEIGHT_VH;
 export function TruckScrollHero() {
   const trackRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start start", "end end"] });
+  // Scroll input arrives in discrete jumps (mouse-wheel ticks, trackpad
+  // frames), which made every transform driven straight off it look jerky.
+  // Passing it through a spring before deriving anything from it keeps the
+  // whole scene scroll-driven (still fully scrubbable, no autoplay) but
+  // interpolates between those jumps instead of snapping to each one.
+  const smoothedScrollYProgress = useSpring(scrollYProgress, { stiffness: 300, damping: 40, mass: 0.6 });
   // 0 → 1 over the pinned scrubbing phase, then holds at 1 through the release.
-  const truckProgress = useTransform(scrollYProgress, [0, PIN_RELEASE_AT, 1], [0, 1, 1]);
+  const truckProgress = useTransform(smoothedScrollYProgress, [0, PIN_RELEASE_AT, 1], [0, 1, 1]);
 
   return (
     <section ref={trackRef} className="relative" style={{ height: `${TRACK_HEIGHT_VH}vh` }}>
