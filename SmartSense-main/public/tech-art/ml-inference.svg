@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 400" width="580" height="400">
+  <defs>
+    <linearGradient id="bg4" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2a0f14"/>
+      <stop offset="50%" stop-color="#4a1120"/>
+      <stop offset="100%" stop-color="#1c0a10"/>
+    </linearGradient>
+    <filter id="blur4"><feGaussianBlur stdDeviation="16"/></filter>
+    <radialGradient id="node" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </radialGradient>
+  </defs>
+  <rect width="580" height="400" fill="url(#bg4)"/>
+  <g filter="url(#blur4)" opacity="0.55">
+    <circle cx="440" cy="120" r="90" fill="#f97316"/>
+    <circle cx="120" cy="290" r="90" fill="#ec4899"/>
+  </g>
+  <g stroke="#fdba74" stroke-width="1.6" opacity="0.7">
+    <line x1="120" y1="120" x2="290" y2="90"/>
+    <line x1="120" y1="120" x2="260" y2="220"/>
+    <line x1="290" y1="90" x2="450" y2="150"/>
+    <line x1="260" y1="220" x2="450" y2="150"/>
+    <line x1="260" y1="220" x2="380" y2="300"/>
+    <line x1="450" y1="150" x2="380" y2="300"/>
+    <line x1="120" y1="120" x2="170" y2="280"/>
+    <line x1="170" y1="280" x2="380" y2="300"/>
+  </g>
+  <g fill="url(#node)">
+    <circle cx="120" cy="120" r="9"/>
+    <circle cx="290" cy="90" r="7"/>
+    <circle cx="260" cy="220" r="10"/>
+    <circle cx="450" cy="150" r="8"/>
+    <circle cx="380" cy="300" r="9"/>
+    <circle cx="170" cy="280" r="6"/>
+  </g>
+</svg>

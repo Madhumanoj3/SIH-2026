@@ -26,6 +26,33 @@ function TruckIllustration({ progress }: { progress: MotionValue<number> }) {
   const pinRingOpacity = useTransform(progress, [0.72, 0.88, 1], [0, 0.55, 0.18]);
   const pinBob = useTransform(progress, (p) => Math.sin(p * Math.PI * 4) * 1.5);
 
+  // Three scroll-synced messaging stages, cross-fading over the same
+  // continuous truck journey — the drawing above never changes, only which
+  // copy is shown fades in/out as `progress` sweeps 0 → 1.
+  const stage1Opacity = useTransform(progress, [0, 0.3, 0.36], [1, 1, 0]);
+  const stage2Opacity = useTransform(progress, [0.3, 0.36, 0.63, 0.69], [0, 1, 1, 0]);
+  const stage3Opacity = useTransform(progress, [0.63, 0.69, 1], [0, 1, 1]);
+  const stages = [
+    {
+      badge: "Live Route",
+      heading: "Predict fatigue before it becomes a risk.",
+      desc: "SmartSense combines real-time EEG and EOG signals with machine learning to detect drowsiness trends before they become a safety risk.",
+      opacity: stage1Opacity,
+    },
+    {
+      badge: "Rest Stop",
+      heading: "Smart rest management, right when it matters.",
+      desc: "The moment fatigue trends start climbing, SmartSense recommends the nearest safe rest stop — timed to your route, not just the clock.",
+      opacity: stage2Opacity,
+    },
+    {
+      badge: "Sleep Insights",
+      heading: "Navigate safely, with sleep monitored end to end.",
+      desc: "Live route guidance keeps drivers on course, while continuous sleep-quality tracking through every rest stop closes the loop on fatigue recovery.",
+      opacity: stage3Opacity,
+    },
+  ];
+
   return (
     // No text sits over this anymore, so it no longer needs the heavy dimming
     // that used to protect legibility — just a light touch for softness.
@@ -38,20 +65,29 @@ function TruckIllustration({ progress }: { progress: MotionValue<number> }) {
 
       {/* SmartSense project messaging — plain, percentage-positioned HTML
           (not part of the SVG below) so it's never at the mercy of the
-          scene's aspect-ratio cropping. This is the hero's primary content;
-          the "Live Route" tag is just a restrained supporting accent above
-          it, reusing the same badge language as the rest of the site. */}
-      <div className="absolute inset-x-0 top-[12%] z-10 flex flex-col items-center px-6 text-center sm:top-[14%]">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-background/85 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-foreground shadow-sm backdrop-blur-sm">
-          <span className="size-2 rounded-full bg-primary" />
-          Live Route
-        </div>
-        <h2 className="max-w-2xl font-display text-3xl font-extrabold tracking-tight text-balance text-foreground sm:text-4xl lg:text-5xl">
-          Predict fatigue before it becomes a risk.
-        </h2>
-        <p className="mt-4 max-w-xl text-balance text-sm leading-relaxed text-muted-foreground sm:text-base">
-          SmartSense combines real-time EEG and EOG signals with machine learning to detect drowsiness trends before they become a safety risk.
-        </p>
+          scene's aspect-ratio cropping. Three stages stack in the same grid
+          cell (so the block sizes to the tallest one, no manual height) and
+          cross-fade against `progress`, in sync with the truck's continuous
+          journey drawn below. */}
+      <div className="absolute inset-x-0 top-[12%] z-10 grid px-6 text-center sm:top-[14%]">
+        {stages.map((stage) => (
+          <motion.div
+            key={stage.badge}
+            style={{ opacity: stage.opacity }}
+            className="col-start-1 row-start-1 mx-auto flex max-w-2xl flex-col items-center"
+          >
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-background/85 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-foreground shadow-sm backdrop-blur-sm">
+              <span className="size-2 rounded-full bg-primary" />
+              {stage.badge}
+            </div>
+            <h2 className="max-w-2xl font-display text-3xl font-extrabold tracking-tight text-balance text-foreground sm:text-4xl lg:text-5xl">
+              {stage.heading}
+            </h2>
+            <p className="mt-4 max-w-xl text-balance text-sm leading-relaxed text-muted-foreground sm:text-base">
+              {stage.desc}
+            </p>
+          </motion.div>
+        ))}
       </div>
 
       {/* `xMidYMax` (not `xMidYMid`) anchors the composition to the bottom of

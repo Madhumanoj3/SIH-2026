@@ -1048,14 +1048,88 @@ function usePersistentTheme() {
       root.classList.toggle("dark", dark);
     };
     apply();
-    if (theme === "system") {
-      const mq = window.matchMedia("(prefers-color-scheme: dark)");
-      mq.addEventListener("change", apply);
-      return () => mq.removeEventListener("change", apply);
-    }
+    const mq = theme === "system" ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+    mq?.addEventListener("change", apply);
+    // This toggles `.dark` on <html> — global, not scoped to the authenticated
+    // shell. Without removing it here, navigating away (e.g. back to the
+    // public homepage) leaves the class stuck from whatever theme was active
+    // when this provider unmounts, and an unrelated page renders dark with no
+    // toggle of its own to explain why.
+    return () => {
+      mq?.removeEventListener("change", apply);
+      root.classList.remove("dark");
+    };
   }, [theme]);
 
   return { theme, setTheme };
+}
+
+/**
+ * Theme control for pages rendered outside SmartSenseProvider (the public
+ * homepage, sign-in, etc.) — reads/writes the same "smartsense-theme" key so
+ * a choice made here or in the authenticated app stays consistent either
+ * way, but resolves its `dark` flag independently rather than trusting
+ * whatever class a mounted/unmounted SmartSenseProvider elsewhere left on
+ * <html> (see the cleanup note in usePersistentTheme above). Callers put the
+ * resolved `dark` on their own root element too (e.g. `dark ? "dark" :
+ * "force-light"`) so the page's own content never has to wait a tick for
+ * the effect below to sync <html> — that sync exists only for the one thing
+ * that can't read a scoped class: AnimatedBackground, mounted outside the
+ * router with no page context of its own.
+ */
+export function usePublicTheme() {
+  const resolve = (mode: ThemeMode) =>
+    mode === "dark" || (mode === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  const [theme, setThemeState] = useState<ThemeMode>(() => {
+    if (typeof window === "undefined") return "light";
+    try {
+      return (localStorage.getItem("smartsense-theme") as ThemeMode) || "light";
+    } catch {
+      return "light";
+    }
+  });
+  const [dark, setDark] = useState(() => (typeof window === "undefined" ? false : resolve(theme)));
+
+  const setTheme = (mode: ThemeMode) => {
+    setThemeState(mode);
+    try {
+      localStorage.setItem("smartsense-theme", mode);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  useEffect(() => {
+    setDark(resolve(theme));
+    if (theme !== "system") return;
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = () => setDark(resolve(theme));
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [theme]);
+
+  // AnimatedBackground (main.tsx) is mounted outside the router and has no
+  // way to know which page is active, so it reads the plain global tokens —
+  // keep <html>'s class in sync with what this page actually resolved to
+  // (not with whatever a different, unrelated theme source left behind), and
+  // clean up on unmount so leaving this page doesn't strand it there either.
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+    return () => document.documentElement.classList.remove("dark");
+  }, [dark]);
+
+  // Picking a theme in the authenticated app (or another tab) writes the same
+  // key — pick it up here too, so the two stay in sync without a shared tree.
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "smartsense-theme" && e.newValue) setThemeState(e.newValue as ThemeMode);
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  return { theme, setTheme, dark };
 }
 
 // ---------------------------------------------------------------------------

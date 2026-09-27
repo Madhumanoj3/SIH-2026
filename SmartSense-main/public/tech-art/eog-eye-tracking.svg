@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 400" width="580" height="400">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#04262b"/>
+      <stop offset="60%" stop-color="#063a3f"/>
+      <stop offset="100%" stop-color="#021618"/>
+    </linearGradient>
+    <radialGradient id="iris" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a5f3fc"/>
+      <stop offset="35%" stop-color="#22d3ee"/>
+      <stop offset="75%" stop-color="#0891b2"/>
+      <stop offset="100%" stop-color="#083344" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur2"><feGaussianBlur stdDeviation="18"/></filter>
+  </defs>
+  <rect width="580" height="400" fill="url(#bg2)"/>
+  <g filter="url(#blur2)" opacity="0.65">
+    <circle cx="300" cy="200" r="150" fill="#22d3ee" opacity="0.35"/>
+    <circle cx="130" cy="320" r="60" fill="#67e8f9" opacity="0.4"/>
+    <circle cx="470" cy="90" r="70" fill="#0ea5e9" opacity="0.35"/>
+  </g>
+  <path d="M60 200 Q300 60 540 200 Q300 340 60 200 Z" fill="none" stroke="#5eead4" stroke-width="2.5" opacity="0.7"/>
+  <circle cx="300" cy="200" r="78" fill="url(#iris)"/>
+  <circle cx="300" cy="200" r="30" fill="#031014"/>
+  <circle cx="286" cy="186" r="9" fill="#ecfeff" opacity="0.85"/>
+  <g stroke="#a5f3fc" stroke-width="1.4" opacity="0.5">
+    <line x1="300" y1="60" x2="300" y2="20"/>
+    <line x1="300" y1="340" x2="300" y2="380"/>
+    <line x1="60" y1="200" x2="20" y2="200"/>
+    <line x1="540" y1="200" x2="560" y2="200"/>
+  </g>
+</svg>

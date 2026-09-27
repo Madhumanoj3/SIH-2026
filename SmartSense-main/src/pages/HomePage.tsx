@@ -13,9 +13,10 @@ import {
   Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePublicTheme } from "@/lib/smartsense";
 import { HeroSection } from "@/components/HeroSection5";
 import Reveal from "@/components/Reveal";
-import { CardStack, type CardStackItem } from "@/components/ui/card-stack";
+import { WorksWheel, type WorksWheelItem } from "@/components/ui/works-wheel";
 import EarbudVideoReveal from "@/components/EarbudVideoReveal";
 
 /* ═══════════════════════════════════════════════════════════════════════ */
@@ -200,32 +201,23 @@ const TECH_CARDS = [
 ] as const;
 
 type TechCard = (typeof TECH_CARDS)[number];
-type TechCardStackItem = CardStackItem & { card: TechCard };
 
-const TECH_CARD_STACK_ITEMS: TechCardStackItem[] = TECH_CARDS.map((card) => ({
-  id: card.title,
+// Original SVG cover art per pillar (public/tech-art/) — vivid gradient +
+// glow compositions echoing the wheel's reference look, not external/stock
+// imagery, so nothing here depends on a third-party asset host.
+const TECH_ART: Record<TechCard["title"], string> = {
+  "EEG Monitoring": "/tech-art/eeg-monitoring.svg",
+  "EOG Eye Tracking": "/tech-art/eog-eye-tracking.svg",
+  "Wi-Fi Telemetry": "/tech-art/wifi-telemetry.svg",
+  "ML Inference": "/tech-art/ml-inference.svg",
+  "Edge Compute": "/tech-art/edge-compute.svg",
+  "Privacy by Design": "/tech-art/privacy-by-design.svg",
+};
+
+const TECH_WHEEL_ITEMS: WorksWheelItem[] = TECH_CARDS.map((card) => ({
   title: card.title,
-  description: card.desc,
-  card,
+  image: TECH_ART[card.title],
 }));
-
-// Vivid, on-brand gradient card faces (matching the reference component's own
-// "colorful photo + white text overlay" composition) instead of external
-// stock imagery — no unrelated assets, same tokens used across the rest of
-// the site (--primary / --primary-2 / --success / --warning).
-function TechCardFace({ item }: { item: TechCardStackItem; active: boolean }) {
-  const { card } = item;
-  return (
-    <div className={cn("relative flex h-full w-full flex-col justify-end overflow-hidden p-6 text-white", card.gradient)}>
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
-      <div className="relative z-10 mb-4 grid size-11 shrink-0 place-items-center rounded-2xl bg-white/20 backdrop-blur-sm">
-        <card.icon size={20} className="text-white" />
-      </div>
-      <h3 className="relative z-10 font-display text-lg font-bold">{card.title}</h3>
-      <p className="relative z-10 mt-2.5 text-sm leading-relaxed text-white/85">{card.desc}</p>
-    </div>
-  );
-}
 
 function TechSection() {
   return (
@@ -242,22 +234,26 @@ function TechSection() {
         </Reveal>
 
         <Reveal delay={100} className="mt-14">
-          <CardStack
-            items={TECH_CARD_STACK_ITEMS}
-            renderCard={(item, state) => <TechCardFace item={item} active={state.active} />}
-            cardWidth={320}
-            cardHeight={260}
-            overlap={0.55}
-            spreadDeg={34}
-            perspectivePx={1000}
-            depthPx={90}
-            tiltXDeg={8}
-            maxVisible={5}
-            autoAdvance
-            intervalMs={3600}
-            pauseOnHover
-            showDots
-          />
+          <div className="soft-card-lg h-[460px] overflow-hidden rounded-[2rem] border border-border/50 bg-[#050510] sm:h-[560px]">
+            <WorksWheel items={TECH_WHEEL_ITEMS} label="Core Technology" action="" />
+          </div>
+          <p className="mt-4 text-center text-[11px] text-muted-foreground/70">
+            Scroll, drag, or use the index to turn the wheel
+          </p>
+        </Reveal>
+
+        <Reveal delay={150} className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {TECH_CARDS.map((card) => (
+            <div key={card.title} className="flex gap-3.5">
+              <span className={cn("grid size-10 shrink-0 place-items-center rounded-xl text-white", card.gradient)}>
+                <card.icon size={17} />
+              </span>
+              <div>
+                <h3 className="font-display text-sm font-bold">{card.title}</h3>
+                <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">{card.desc}</p>
+              </div>
+            </div>
+          ))}
         </Reveal>
       </div>
     </section>
@@ -406,9 +402,15 @@ function LandingFooter() {
  * All existing authenticated routes remain completely unchanged.
  */
 export default function HomePage() {
+  // Resolves its own light/dark state instead of trusting document.documentElement:
+  // the authenticated dashboard's theme provider toggles a `.dark` class there
+  // and previously never cleaned it up on unmount, so navigating back here could
+  // inherit a stale dark class with no toggle on this page to explain it.
+  const { setTheme, dark } = usePublicTheme();
+
   return (
-    <div className="min-h-screen text-foreground antialiased">
-      <HeroSection />
+    <div className={cn("min-h-screen text-foreground antialiased", dark ? "dark" : "force-light")}>
+      <HeroSection setTheme={setTheme} dark={dark} />
       <PhilosophyStrip />
       <HowItWorks />
       <TechSection />
