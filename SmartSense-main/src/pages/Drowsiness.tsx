@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AlertTriangle, Gauge as GaugeIcon, Loader2, TrendingDown, TrendingUp, Minus } from "lucide-react";
 import { AnimatedNumber, Button, Card, DashboardShell, Gauge, PageIntro, Pill, SectionLabel } from "@/components/AppShell";
 import { useSmartSense, vigilanceLabelKey, trendLabelKey, type VigilanceState } from "@/lib/smartsense";
+import { callMlBackend, mlBackendErrorMessage } from "@/lib/mlBackend";
 import driveSamples from "@/lib/demoSamples/driveSamples.json";
 
 const episodes = [
@@ -19,8 +20,6 @@ const episodes = [
 // running locally) and shows the returned vigilance score here. Once real
 // hardware exists, only the feature-vector source changes.
 // ---------------------------------------------------------------------------
-const ML_BACKEND_URL = "https://sih-2026-backend-bq02.onrender.com";
-
 export default function Drowsiness() {
   const { state, t } = useSmartSense();
   const TrendIcon = state.trend === "IMPROVING" ? TrendingUp : state.trend === "STABLE" ? Minus : TrendingDown;
@@ -28,41 +27,26 @@ export default function Drowsiness() {
   const [vigilance, setVigilance] = useState<number | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [wakingUp, setWakingUp] = useState<string | null>(null);
 
   async function runDriveAnalysis() {
     setAnalyzing(true);
     setError(null);
+    setWakingUp(null);
     try {
       const sample = driveSamples[Math.floor(Math.random() * driveSamples.length)];
-      const res = await fetch(`${ML_BACKEND_URL}/api/predict/drive`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(sample),
+      const data = await callMlBackend<{ vigilance?: number }>("/api/predict/drive", sample, {
+        onRetry: (attempt, maxAttempts) =>
+          setWakingUp(`The ML backend looks asleep — waking it up (attempt ${attempt}/${maxAttempts - 1})…`),
       });
-      if (!res.ok) {
-        let detail = `Backend returned HTTP ${res.status}`;
-        try {
-          const body = await res.json();
-          if (typeof body?.detail === "string") detail = body.detail;
-          else if (body?.detail) detail = JSON.stringify(body.detail);
-        } catch {
-          // Response wasn't JSON — fall back to the HTTP status above.
-        }
-        throw new Error(detail);
-      }
-      const data = await res.json();
       if (typeof data?.vigilance !== "number") {
         throw new Error("Backend response was missing the expected vigilance field.");
       }
       setVigilance(data.vigilance);
     } catch (err) {
-      const unreachable = err instanceof TypeError;
-      setError(
-        unreachable
-          ? `Can't reach the ML backend at ${ML_BACKEND_URL}. Make sure it's running (python -m uvicorn main:app --reload from the backend folder).`
-          : `Prediction failed: ${err instanceof Error ? err.message : String(err)}`,
-      );
+      setError(mlBackendErrorMessage(err));
     } finally {
+      setWakingUp(null);
       setAnalyzing(false);
     }
   }
@@ -134,13 +118,19 @@ export default function Drowsiness() {
               )}
             </Button>
           </div>
-          {error && (
+          {wakingUp && (
+            <div className="mt-3 flex items-start gap-3 rounded-2xl bg-warning/10 p-3.5">
+              <Loader2 size={16} className="mt-0.5 shrink-0 animate-spin text-warning" />
+              <p className="text-xs leading-relaxed text-warning">{wakingUp}</p>
+            </div>
+          )}
+          {error && !wakingUp && (
             <div className="mt-3 flex items-start gap-3 rounded-2xl bg-destructive/10 p-3.5">
               <AlertTriangle size={16} className="mt-0.5 shrink-0 text-destructive" />
               <p className="text-xs leading-relaxed text-destructive">{error}</p>
             </div>
           )}
-          {vigilance != null && !error && (
+          {vigilance != null && !error && !wakingUp && (
             <p className="mt-3 text-xs text-muted-foreground">
               Last analysis from the ML backend: <b>{vigilance.toFixed(1)}</b> / 100 vigilance.
             </p>

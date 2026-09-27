@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AlertTriangle, ArrowUpRight, CarFront, CheckCircle2, Loader2, Moon, Sparkles, Sunrise } from "lucide-react";
 import { AnimatedNumber, Button, Card, DashboardShell, PageIntro, Pill, SectionLabel, Waveform } from "@/components/AppShell";
 import { nextOccurrenceOf, sleepStateFriendly, useSmartSense, type SleepState } from "@/lib/smartsense";
+import { callMlBackend, mlBackendErrorMessage } from "@/lib/mlBackend";
 import restSamples from "@/lib/demoSamples/restSamples.json";
 
 // ---------------------------------------------------------------------------
@@ -16,8 +17,6 @@ import restSamples from "@/lib/demoSamples/restSamples.json";
 // once hardware exists, only that data-selection step changes — this page,
 // the endpoint, and the response shape it expects all stay exactly the same.
 // ---------------------------------------------------------------------------
-const ML_BACKEND_URL = "https://sih-2026-backend-bq02.onrender.com";
-
 interface MlAnalysis {
   prediction: "N2" | "Non-N2";
   n2Probability: number;
@@ -31,29 +30,18 @@ export default function SleepRecovery() {
   const [analysis, setAnalysis] = useState<MlAnalysis | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [wakingUp, setWakingUp] = useState<string | null>(null);
 
   async function runAnalysis() {
     setAnalyzing(true);
     setAnalysisError(null);
+    setWakingUp(null);
     try {
       const sample = restSamples[Math.floor(Math.random() * restSamples.length)];
-      const res = await fetch(`${ML_BACKEND_URL}/api/predict/rest`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(sample),
+      const data = await callMlBackend<{ n2_probability?: number; prediction?: string }>("/api/predict/rest", sample, {
+        onRetry: (attempt, maxAttempts) =>
+          setWakingUp(`The ML backend looks asleep — waking it up (attempt ${attempt}/${maxAttempts - 1})…`),
       });
-      if (!res.ok) {
-        let detail = `Backend returned HTTP ${res.status}`;
-        try {
-          const body = await res.json();
-          if (typeof body?.detail === "string") detail = body.detail;
-          else if (body?.detail) detail = JSON.stringify(body.detail);
-        } catch {
-          // Response wasn't JSON — fall back to the HTTP status above.
-        }
-        throw new Error(detail);
-      }
-      const data = await res.json();
       if (typeof data?.n2_probability !== "number" || typeof data?.prediction !== "string") {
         throw new Error("Backend response was missing the expected prediction fields.");
       }
@@ -62,16 +50,9 @@ export default function SleepRecovery() {
         n2Probability: data.n2_probability,
       });
     } catch (err) {
-      // fetch() rejects with a TypeError specifically when the request never reached a server
-      // (backend not running, wrong port, CORS blocked) — everything else is the backend
-      // responding with an actual failure, so the two get distinct messages.
-      const unreachable = err instanceof TypeError;
-      setAnalysisError(
-        unreachable
-          ? `Can't reach the ML backend at ${ML_BACKEND_URL}. Make sure it's running (python -m uvicorn main:app --reload from the backend folder).`
-          : `Prediction failed: ${err instanceof Error ? err.message : String(err)}`,
-      );
+      setAnalysisError(mlBackendErrorMessage(err));
     } finally {
+      setWakingUp(null);
       setAnalyzing(false);
     }
   }
@@ -165,14 +146,21 @@ export default function SleepRecovery() {
                 )}
               </Button>
 
-              {analysisError && (
+              {wakingUp && (
+                <div className="mt-3 flex items-start gap-3 rounded-2xl bg-warning/10 p-3.5">
+                  <Loader2 size={16} className="mt-0.5 shrink-0 animate-spin text-warning" />
+                  <p className="text-xs leading-relaxed text-warning">{wakingUp}</p>
+                </div>
+              )}
+
+              {analysisError && !wakingUp && (
                 <div className="mt-3 flex items-start gap-3 rounded-2xl bg-destructive/10 p-3.5">
                   <AlertTriangle size={16} className="mt-0.5 shrink-0 text-destructive" />
                   <p className="text-xs leading-relaxed text-destructive">{analysisError}</p>
                 </div>
               )}
 
-              {analysis && !analysisError && (
+              {analysis && !analysisError && !wakingUp && (
                 <p className="mt-3 text-xs text-muted-foreground">
                   Last analysis from the ML backend: <b>{analysis.prediction}</b> · {(analysis.n2Probability * 100).toFixed(1)}% N2 probability.
                 </p>
