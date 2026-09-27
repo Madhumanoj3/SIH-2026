@@ -14,7 +14,7 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument(
     "--esp32-url",
-    default="http://192.168.137.242",
+    default="http://192.168.137.119",
     help="ESP32 base URL"
 )
 
