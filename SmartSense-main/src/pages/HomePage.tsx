@@ -6,7 +6,6 @@ import {
   Cpu,
   Eye,
   Heart,
-  Radio,
   Shield,
   ShieldCheck,
   Sparkles,
@@ -17,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { HeroSection } from "@/components/HeroSection5";
 import Reveal from "@/components/Reveal";
 import { CardStack, type CardStackItem } from "@/components/ui/card-stack";
+import EarbudVideoReveal from "@/components/EarbudVideoReveal";
 
 /* ═══════════════════════════════════════════════════════════════════════ */
 /* Philosophy Infinite Strip                                               */
@@ -271,48 +271,25 @@ function TechSection() {
 
 function Earpiece3DSlot() {
   return (
-    <section
-      id="product-3d"
-      className="relative mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:py-32"
-      aria-label="Interactive product preview — coming soon"
-    >
-      <Reveal className="mx-auto max-w-2xl text-center">
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Coming Soon</p>
-        <h2 className="mt-3 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
-          Meet the Wearable
-        </h2>
-        <p className="mx-auto mt-4 max-w-lg text-[15px] text-muted-foreground">
-          An interactive 3D showcase of the SmartSense EEG + EOG wearable earpiece — explore every sensor.
-        </p>
-      </Reveal>
+    <>
+      <section
+        id="product-3d"
+        className="relative mx-auto max-w-7xl px-5 pt-24 sm:px-8 lg:pt-32"
+        aria-label="Scroll-driven product reveal"
+      >
+        <Reveal className="mx-auto max-w-2xl text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Meet the Hardware</p>
+          <h2 className="mt-3 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
+            Meet the Wearable
+          </h2>
+          <p className="mx-auto mt-4 max-w-lg text-[15px] text-muted-foreground">
+            Keep scrolling — the earbud rotates, opens up, and reveals the EEG + EOG hardware inside.
+          </p>
+        </Reveal>
+      </section>
 
-      {/* ── Placeholder canvas area — replace with <Canvas>...</Canvas> ── */}
-      <Reveal delay={100} className="mt-12 flex justify-center">
-        <div className="soft-card-lg relative flex h-80 w-full max-w-2xl items-center justify-center overflow-hidden rounded-[2rem] border-2 border-dashed border-primary/30 bg-card/50 sm:h-96">
-          {/* Ambient glow */}
-          <div
-            className="pointer-events-none absolute inset-0 opacity-25"
-            style={{
-              background: "radial-gradient(circle at 50% 50%, var(--glow-primary), transparent 65%)",
-            }}
-          />
-          {/* Rotating ring decoration */}
-          <div className="spin-slow pointer-events-none absolute inset-8 rounded-full border border-primary/20 border-dashed" />
-          <div className="relative flex flex-col items-center gap-4 text-center">
-            <div className="glow-primary grid size-18 place-items-center rounded-full bg-gradient-to-br from-primary/25 to-primary/8 p-5">
-              <Radio size={32} className="text-primary" />
-            </div>
-            <div>
-              <p className="font-display text-lg font-bold">SmartSense Wearable</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                3D Interactive Preview — Arriving Soon
-              </p>
-            </div>
-          </div>
-        </div>
-      </Reveal>
-      {/* END placeholder — future: <Canvas camera={{ fov: 40 }}><EarpieceModel /></Canvas> */}
-    </section>
+      <EarbudVideoReveal />
+    </>
   );
 }
 
