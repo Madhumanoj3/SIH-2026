@@ -1,17 +1,9 @@
 import { useState } from "react";
-import { Battery, Bell, Bluetooth, Database, FlaskConical, Globe, Heart, Info, LogOut, Moon, Palette, Radio, Shield, Sun, User } from "lucide-react";
+import { Battery, Bell, Bluetooth, FlaskConical, Globe, Heart, Info, LogOut, Moon, Palette, Radio, Shield, Sun, User } from "lucide-react";
 import { Button, Card, DashboardShell, PageIntro, Pill, SafetyStageStrip, SectionLabel } from "@/components/AppShell";
 import { languageNames, useSmartSense, vigilanceLabelKey, vigilanceScoreForStage, type Language, type ThemeMode, type VigilanceState } from "@/lib/smartsense";
 import { cn } from "@/lib/utils";
 import { signOut, useAuthSession } from "@/lib/auth";
-
-const dbStatusLabel = {
-  unconfigured: "Setup needed",
-  connecting: "Connecting…",
-  connected: "Connected",
-  error: "Connection error",
-} as const;
-const dbStatusTone = { unconfigured: "default", connecting: "default", connected: "good", error: "danger" } as const;
 
 const drowsinessStages: { stage: VigilanceState; number: number; description: string }[] = [
   { stage: "ALERT", number: 1, description: "Fully alert — no rest action needed." },
@@ -26,7 +18,6 @@ const statusLabel = { CONNECTED: "Connected", POOR: "Weak signal", DISCONNECTED:
 const sections = [
   { id: "profile", label: "Profile", icon: User },
   { id: "device", label: "Device", icon: Radio },
-  { id: "database", label: "Database", icon: Database },
   { id: "notifications", label: "Notifications", icon: Bell },
   { id: "language", label: "Language", icon: Globe },
   { id: "appearance", label: "Appearance", icon: Palette },
@@ -187,41 +178,6 @@ export default function SettingsPage() {
         )}
       </Card>
 
-      <Card id="database">
-        <div className="flex items-center gap-2">
-          <Database size={16} className="text-primary" />
-          <SectionLabel>Database</SectionLabel>
-          <span className="ml-auto">
-            <Pill tone={dbStatusTone[dbStatus]}>{dbStatusLabel[dbStatus]}</Pill>
-          </span>
-        </div>
-        {dbStatus === "unconfigured" ? (
-          <p className="mt-3 text-sm text-muted-foreground">
-            No database is connected — the app runs entirely in this browser, and nothing is sent anywhere. To connect
-            a real Supabase project (so rest sessions are actually saved), set{" "}
-            <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">VITE_SUPABASE_URL</code> and{" "}
-            <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">VITE_SUPABASE_ANON_KEY</code> — see{" "}
-            <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">.env.example</code> and the README.
-          </p>
-        ) : (
-          <p className="mt-3 text-sm text-muted-foreground">
-            Connected to Supabase. Each time you enter and leave Rest Mode, a row is written to and updated in the{" "}
-            <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">sleep_sessions</code> table — you can watch it
-            appear live in your project's Table Editor. Per-epoch predictions and Smart Alarm events will land in{" "}
-            <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">sleep_epochs</code> /{" "}
-            <code className="rounded bg-secondary px-1.5 py-0.5 text-xs">alarm_events</code> once the ML pipeline is
-            wired in.
-          </p>
-        )}
-        {dbStatus === "error" && (
-          <p className="mt-2 text-xs text-warning">
-            Couldn't reach the database — check your Supabase URL/key in <code className="rounded bg-secondary px-1 py-0.5">.env.local</code> are
-            correct, that <code className="rounded bg-secondary px-1 py-0.5">supabase/migrations/0001_init_schema.sql</code> has been run in your
-            project's SQL Editor, and check the browser console for the specific error.
-          </p>
-        )}
-      </Card>
-
       <Card id="notifications">
         <div className="flex items-center gap-2">
           <Bell size={16} className="text-primary" />
@@ -326,7 +282,7 @@ export default function SettingsPage() {
         </div>
         <p className="mt-4 text-xs text-muted-foreground">
           All physiological data shown in this prototype is simulated locally in your browser.{" "}
-          {dbStatus === "unconfigured" ? "Nothing is transmitted anywhere." : "See Database above for what's saved when a database is connected."}
+          {dbStatus === "unconfigured" ? "Nothing is transmitted anywhere." : "Data is synced to your connected database."}
         </p>
       </Card>
 

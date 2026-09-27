@@ -1,7 +1,8 @@
-import { AlertTriangle, BarChart3, Download, FileJson, FileText, Moon, Sparkles } from "lucide-react";
+import jsPDF from "jspdf";
+import { Download, FileText } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Button, Card, DashboardShell, Metric, PageIntro, SectionLabel } from "@/components/AppShell";
-import { useSmartSense } from "@/lib/smartsense";
+import { Button, Card, DashboardShell, Metric, PageIntro, Pill, SectionLabel } from "@/components/AppShell";
+import { useSmartSense, type DriveRecord } from "@/lib/smartsense";
 import { formatDuration } from "@/lib/utils";
 
 const weekly = [
@@ -9,33 +10,41 @@ const weekly = [
   { day: "Thu", minutes: 156 }, { day: "Fri", minutes: 138 }, { day: "Sat", minutes: 64 }, { day: "Sun", minutes: 40 },
 ];
 
-function download(filename: string, content: string, type: string) {
-  const blob = new Blob([content], { type });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
+function downloadDrivingReportPdf(record: DriveRecord) {
+  const doc = new jsPDF();
+  doc.setFontSize(18);
+  doc.text("SmartSense — Completed Driving Report", 14, 20);
+  doc.setFontSize(11);
+  doc.setTextColor(90);
+  const lines: [string, string][] = [
+    ["Date", record.date],
+    ["Route", record.route],
+    ["Duration", formatDuration(record.durationMin)],
+    ["Distance", `${record.distanceKm} km`],
+    ["Average vigilance", String(record.avgVigilance)],
+    ["Rest breaks", String(record.restBreaks)],
+    ["Outcome", record.outcome],
+  ];
+  lines.forEach(([label, value], i) => {
+    doc.text(`${label}:`, 14, 36 + i * 8);
+    doc.text(value, 60, 36 + i * 8);
+  });
+  doc.setFontSize(9);
+  doc.setTextColor(140);
+  doc.text("Simulated demo data — SmartSense prototype.", 14, 280);
+  const slug = `${record.date}-${record.route}`.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  doc.save(`${slug}-driving-report.pdf`);
 }
 
 export default function Reports() {
   const { state, t } = useSmartSense();
-
-  const reportCards = [
-    { label: "Daily Driving Report", icon: FileText, data: { drivingMinutes: state.drivingMinutesToday, distanceKm: state.distanceKm, avgVigilance: state.vigilanceScore } },
-    { label: "Weekly Driving Report", icon: BarChart3, data: weekly },
-    { label: "Drowsiness Summary", icon: AlertTriangle, data: { events: state.alerts.filter((a) => a.category === "drowsiness").length, worstState: state.vigilanceState } },
-    { label: "Rest Summary", icon: Moon, data: { restBreaks: state.history.reduce((s, d) => s + d.restBreaks, 0), lastSession: state.restSessionMinutes } },
-    { label: "Recovery Summary", icon: Sparkles, data: { before: state.recoveryBefore, after: state.recoveryAfter } },
-  ];
 
   return (
     <DashboardShell>
       <PageIntro
         eyebrow={`SmartSense / ${t("reports")}`}
         title={t("reports")}
-        description="Daily and weekly driving, drowsiness, rest and recovery summaries — exportable for records or sharing."
+        description="Completed driving reports, ready to download as PDF for records or sharing."
       />
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -59,34 +68,27 @@ export default function Reports() {
         </div>
       </Card>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        {reportCards.map(({ label, icon: Icon, data }) => (
-          <Card key={label}>
-            <Icon className="text-primary" size={22} />
-            <h3 className="mt-4 font-display text-lg font-bold">{label}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">Prepare a clean export of this dataset for this driver's records.</p>
-            <div className="mt-5 flex gap-2">
-              <Button
-                variant="secondary"
-                className="flex-1"
-                onClick={() => download(`${label.toLowerCase().replaceAll(" ", "-")}.json`, JSON.stringify(data, null, 2), "application/json")}
-              >
-                <FileJson size={13} /> JSON
-              </Button>
-              <Button
-                className="flex-1"
-                onClick={() => {
-                  const rows = Array.isArray(data)
-                    ? [Object.keys(data[0]).join(","), ...data.map((r: Record<string, unknown>) => Object.values(r).join(","))]
-                    : [Object.keys(data).join(","), Object.values(data).join(",")];
-                  download(`${label.toLowerCase().replaceAll(" ", "-")}.csv`, rows.join("\n"), "text/csv");
-                }}
-              >
-                <Download size={13} /> CSV
-              </Button>
-            </div>
-          </Card>
-        ))}
+      <div>
+        <SectionLabel>Completed driving reports</SectionLabel>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {state.history.map((record) => (
+            <Card key={record.id}>
+              <div className="flex items-start justify-between gap-3">
+                <FileText className="text-primary" size={22} />
+                <Pill tone={record.outcome === "improved" ? "good" : record.outcome === "watch" ? "warn" : "default"}>{record.outcome}</Pill>
+              </div>
+              <h3 className="mt-4 font-display text-lg font-bold">{record.date} — {record.route}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {formatDuration(record.durationMin)} · {record.distanceKm} km · avg vigilance {record.avgVigilance} · {record.restBreaks} rest break{record.restBreaks === 1 ? "" : "s"}
+              </p>
+              <div className="mt-5">
+                <Button className="w-full" onClick={() => downloadDrivingReportPdf(record)}>
+                  <Download size={13} /> Download PDF
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
 
       <Card>
