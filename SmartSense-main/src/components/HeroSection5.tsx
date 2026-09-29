@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { ProgressiveBlur } from "@/components/ui/progressive-blur";
@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Heart, Menu, Moon, Sun, X } from "lucide-react";
 import { useScroll, motion } from "motion/react";
 import { TruckScrollHero } from "@/components/TruckScrollHero";
+import { signInAsDemo } from "@/lib/auth";
 import type { ThemeMode } from "@/lib/smartsense";
 
 export function HeroSection({
@@ -109,6 +110,19 @@ const HeroHeader = ({
   const toggleTheme = () => setTheme(dark ? "light" : "dark");
   const [scrolled, setScrolled] = React.useState(false);
   const { scrollYProgress } = useScroll();
+  const navigate = useNavigate();
+  const [demoSigningIn, setDemoSigningIn] = React.useState(false);
+
+  // Deployed for evaluation: skip the credential form entirely and drop
+  // straight into the dashboard on a shared pre-confirmed demo account.
+  // Falls back to the real /login form if that ever fails (e.g. the demo
+  // account's password is rotated) so this never becomes a dead click.
+  const handleDemoLogin = async () => {
+    setDemoSigningIn(true);
+    const result = await signInAsDemo();
+    setDemoSigningIn(false);
+    navigate(result.ok ? "/overview" : "/login");
+  };
 
   React.useEffect(() => {
     const unsubscribe = scrollYProgress.on("change", (latest) => {
@@ -180,10 +194,8 @@ const HeroHeader = ({
                   {dark ? <Sun size={15} /> : <Moon size={15} />}
                 </button>
 
-                <Button asChild variant="outline" size="sm">
-                  <Link to="/login">
-                    <span>Login</span>
-                  </Link>
+                <Button variant="outline" size="sm" onClick={handleDemoLogin} disabled={demoSigningIn}>
+                  <span>{demoSigningIn ? "Signing in…" : "Login"}</span>
                 </Button>
 
                 <Button asChild size="sm">

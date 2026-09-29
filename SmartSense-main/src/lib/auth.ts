@@ -94,3 +94,17 @@ export async function signOut(): Promise<void> {
   if (!supabase) return;
   await supabase.auth.signOut();
 }
+
+// Deployed evaluation build: reviewers shouldn't have to register or enter
+// credentials just to see the dashboard. This is one pre-confirmed Supabase
+// account, shared by every evaluator, that only ever unlocks this app's own
+// simulated demo data — not a secret worth protecting, since it ships
+// inside the public frontend bundle either way. The homepage's "Login" nav
+// button signs in with this directly instead of showing the real sign-in
+// form (still reachable at /login for anyone who wants their own account).
+const DEMO_EMAIL = "gandhimathi.phy+smartsense.demo@gmail.com";
+const DEMO_PASSWORD = "SmartSense-Demo-2026!";
+
+export async function signInAsDemo(): Promise<AuthResult> {
+  return signInWithPassword(DEMO_EMAIL, DEMO_PASSWORD);
+}
